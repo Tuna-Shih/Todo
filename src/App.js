@@ -4,18 +4,11 @@ import TodoItem from "./TodoItem";
 import Todo from "./Todo";
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      todos: [],
-      todoText: "",
-    };
-    this.id = 1;
-
-    this.addTodo = this.addTodo.bind(this);
-    this.deleteTodo = this.deleteTodo.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-  }
+  state = {
+    todos: [],
+    todoText: "",
+  };
+  id = 1;
 
   componentDidMount() {
     const todoData = document.cookie;
@@ -35,11 +28,13 @@ class App extends React.Component {
 
   addTodo() {
     const { todos, todoText } = this.state;
-    this.setState({
-      todos: [...todos, { id: this.id, text: todoText }],
-      todoText: "",
-    });
-    this.id++;
+    if (todoText.replace(/\s*/g, "") !== "") {
+      this.setState({
+        todos: [...todos, { id: this.id, text: todoText }],
+        todoText: "",
+      });
+      this.id++;
+    }
   }
 
   deleteTodo(id) {
@@ -61,14 +56,18 @@ class App extends React.Component {
         <div className="add">
           <TodoItem
             todoText={todoText}
-            addTodo={this.addTodo}
-            handleChange={this.handleChange}
+            addTodo={this.addTodo.bind(this)}
+            handleChange={this.handleChange.bind(this)}
           />
         </div>
         <h2>Todo!</h2>
         <div className="list">
           {todos.map((todo) => (
-            <Todo todo={todo} deleteTodo={this.deleteTodo} />
+            <Todo
+              key={todo.id}
+              todo={todo}
+              deleteTodo={this.deleteTodo.bind(this)}
+            />
           ))}
         </div>
       </div>

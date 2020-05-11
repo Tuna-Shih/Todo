@@ -11,6 +11,13 @@
   display: flex;
   position: relative;
 }
+
+.list-item__content {
+  position: relative;
+  left: 1px;
+  margin-bottom: 1px;
+}
+
 .list-item__state {
   position: absolute;
   right: 0;

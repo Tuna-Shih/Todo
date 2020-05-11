@@ -1,12 +1,7 @@
 import React from "react";
 
 class Todo extends React.Component {
-  constructor(props) {
-    super(props);
-    this.delete = this.delete.bind(this);
-  }
-
-  delete(id) {
+  delete() {
     const { todo, deleteTodo } = this.props;
     deleteTodo(todo.id);
   }
@@ -17,7 +12,7 @@ class Todo extends React.Component {
       <div className="list-item">
         <div className="list-item__content">{todo.text}</div>
         <div className="list-item__state">
-          <button className="delete" onClick={this.delete}>
+          <button className="delete" onClick={this.delete.bind(this)}>
             Delete
           </button>
         </div>

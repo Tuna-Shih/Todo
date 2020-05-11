@@ -1,12 +1,6 @@
 import React from "react";
 
 class TodoItem extends React.Component {
-  constructor(props) {
-    super(props);
-    this.add = this.add.bind(this);
-    this.handle = this.handle.bind(this);
-  }
-
   handle(e) {
     const { handleChange } = this.props;
     handleChange(e);
@@ -24,10 +18,10 @@ class TodoItem extends React.Component {
         <input
           type="text"
           value={todoText}
-          onChange={this.handle}
+          onChange={this.handle.bind(this)}
           placeholder="Add Something"
         />
-        <button className="add-todo" onClick={this.add}>
+        <button className="add-todo" onClick={this.add.bind(this)}>
           New
         </button>
       </div>
