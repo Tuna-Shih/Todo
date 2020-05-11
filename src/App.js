@@ -2,6 +2,7 @@ import React from "react";
 import "./App.css";
 import TodoItem from "./TodoItem";
 import Todo from "./Todo";
+import cookies from "js-cookie";
 
 class App extends React.Component {
   constructor(props) {
@@ -18,7 +19,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    const todoData = window.localStorage.getItem("todoapp");
+    const todoData = cookies.get("todoapp");
     if (todoData) {
       const oldTodos = JSON.parse(todoData);
       this.setState({
@@ -29,7 +30,7 @@ class App extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.todos !== this.state.todos) {
-      window.localStorage.setItem("todoapp", JSON.stringify(this.state.todos));
+      cookies.set("todoapp", JSON.stringify(this.state.todos));
     }
   }
   addTodo() {
