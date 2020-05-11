@@ -2,6 +2,7 @@ import React from "react";
 import "./App.css";
 import TodoItem from "./TodoItem";
 import Todo from "./Todo";
+import Cookies from "js-cookie";
 
 class App extends React.Component {
   constructor(props) {
@@ -18,7 +19,8 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    const todoData = document.cookie;
+    const todoData = Cookies.get("Todo");
+    console.log(todoData);
     if (todoData) {
       const oldTodos = JSON.parse(todoData);
       this.setState({
@@ -29,17 +31,18 @@ class App extends React.Component {
 
   componentDidUpdate(prevState) {
     if (prevState.todos !== this.state.todos) {
-      document.cookie = JSON.stringify(this.state.todos);
+      Cookies.set("Todo", JSON.stringify(this.state.todos));
     }
   }
-
   addTodo() {
     const { todos, todoText } = this.state;
-    this.setState({
-      todos: [...todos, { id: this.id, text: todoText }],
-      todoText: "",
-    });
-    this.id++;
+    if (todoText.replace(/\s*/g, "") !== "") {
+      this.setState({
+        todos: [...todos, { id: this.id, text: todoText }],
+        todoText: "",
+      });
+      this.id++;
+    }
   }
 
   deleteTodo(id) {
@@ -68,7 +71,7 @@ class App extends React.Component {
         <h2>Todo!</h2>
         <div className="list">
           {todos.map((todo) => (
-            <Todo todo={todo} deleteTodo={this.deleteTodo} />
+            <Todo key={todo.id} todo={todo} deleteTodo={this.deleteTodo} />
           ))}
         </div>
       </div>
