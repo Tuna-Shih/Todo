@@ -1,10 +1,10 @@
 import React from "react";
 
 class Todo extends React.Component {
-  delete() {
+  delete = () => {
     const { todo, deleteTodo } = this.props;
     deleteTodo(todo.id);
-  }
+  };
 
   render() {
     const { todo } = this.props;
@@ -12,7 +12,7 @@ class Todo extends React.Component {
       <div className="list-item">
         <div className="list-item__content">{todo.text}</div>
         <div className="list-item__state">
-          <button className="delete" onClick={this.delete.bind(this)}>
+          <button className="delete" onClick={this.delete}>
             Delete
           </button>
         </div>

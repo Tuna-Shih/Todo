@@ -25,7 +25,7 @@ class App extends React.Component {
       window.localStorage.setItem("todoapp", JSON.stringify(this.state.todos));
     }
   }
-  addTodo() {
+  addTodo = () => {
     const { todos, todoText } = this.state;
     if (todoText.replace(/\s*/g, "") !== "") {
       this.setState({
@@ -34,19 +34,19 @@ class App extends React.Component {
       });
       this.id++;
     }
-  }
+  };
 
-  deleteTodo(id) {
+  deleteTodo = (id) => {
     this.setState({
       todos: this.state.todos.filter((todo) => todo.id !== id),
     });
-  }
+  };
 
-  handleChange(e) {
+  handleChange = (e) => {
     this.setState({
       todoText: e.target.value,
     });
-  }
+  };
 
   render() {
     const { todos, todoText } = this.state;
@@ -55,18 +55,14 @@ class App extends React.Component {
         <div className="add">
           <TodoItem
             todoText={todoText}
-            addTodo={this.addTodo.bind(this)}
-            handleChange={this.handleChange.bind(this)}
+            addTodo={this.addTodo}
+            handleChange={this.handleChange}
           />
         </div>
         <h2>Todo!</h2>
         <div className="list">
           {todos.map((todo) => (
-            <Todo
-              key={todo.id}
-              todo={todo}
-              deleteTodo={this.deleteTodo.bind(this)}
-            />
+            <Todo key={todo.id} todo={todo} deleteTodo={this.deleteTodo} />
           ))}
         </div>
       </div>

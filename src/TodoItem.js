@@ -1,15 +1,15 @@
 import React from "react";
 
 class TodoItem extends React.Component {
-  handle(e) {
+  handle = (e) => {
     const { handleChange } = this.props;
     handleChange(e);
-  }
+  };
 
-  add() {
+  add = () => {
     const { addTodo } = this.props;
     addTodo();
-  }
+  };
 
   render() {
     const { todoText } = this.props;
@@ -18,10 +18,10 @@ class TodoItem extends React.Component {
         <input
           type="text"
           value={todoText}
-          onChange={this.handle.bind(this)}
+          onChange={this.handle}
           placeholder="Add Something"
         />
-        <button className="add-todo" onClick={this.add.bind(this)}>
+        <button className="add-todo" onClick={this.add}>
           New
         </button>
       </div>
