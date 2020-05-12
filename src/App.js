@@ -1,4 +1,5 @@
 import React from "react";
+import uuid from "react-uuid";
 import "./App.css";
 import TodoItem from "./TodoItem";
 import Todo from "./Todo";
@@ -10,8 +11,6 @@ class App extends React.Component {
       todos: [],
       todoText: "",
     };
-    this.id = 1;
-
     this.addTodo = this.addTodo.bind(this);
     this.deleteTodo = this.deleteTodo.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -36,10 +35,9 @@ class App extends React.Component {
     const { todos, todoText } = this.state;
     if (todoText.replace(/\s*/g, "") !== "") {
       this.setState({
-        todos: [...todos, { id: this.id, text: todoText }],
+        todos: [...todos, { id: uuid(), text: todoText }],
         todoText: "",
       });
-      this.id++;
     }
   }
 
@@ -69,7 +67,7 @@ class App extends React.Component {
         <h2>Todo!</h2>
         <div className="list">
           {todos.map((todo) => (
-            <Todo key={todo.id} todo={todo} deleteTodo={this.deleteTodo} />
+            <Todo key={uuid()} todo={todo} deleteTodo={this.deleteTodo} />
           ))}
         </div>
       </div>
