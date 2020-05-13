@@ -48,6 +48,12 @@ class App extends React.Component {
     });
   };
 
+  handleSubmit = (id, editTodo) => {
+    this.setState({
+      todos: this.state.todos.map((todo) => (todo.id === id ? editTodo : todo)),
+    });
+  };
+
   render() {
     const { todos, todoText } = this.state;
     return (
@@ -62,7 +68,12 @@ class App extends React.Component {
         <h2>Todo!</h2>
         <div className="list">
           {todos.map((todo) => (
-            <Todo key={todo.id} todo={todo} deleteTodo={this.deleteTodo} />
+            <Todo
+              key={todo.id}
+              todo={todo}
+              deleteTodo={this.deleteTodo}
+              handleSubmit={this.handleSubmit}
+            />
           ))}
         </div>
       </div>
