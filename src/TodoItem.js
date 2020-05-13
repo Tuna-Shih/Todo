@@ -1,21 +1,15 @@
 import React from "react";
 
 class TodoItem extends React.Component {
-  constructor(props) {
-    super(props);
-    this.add = this.add.bind(this);
-    this.handle = this.handle.bind(this);
-  }
-
-  handle(e) {
+  handle = (e) => {
     const { handleChange } = this.props;
     handleChange(e);
-  }
+  };
 
-  add() {
+  add = () => {
     const { addTodo } = this.props;
     addTodo();
-  }
+  };
 
   render() {
     const { todoText } = this.props;

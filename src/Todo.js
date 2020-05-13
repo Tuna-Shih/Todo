@@ -1,15 +1,10 @@
 import React from "react";
 
 class Todo extends React.Component {
-  constructor(props) {
-    super(props);
-    this.delete = this.delete.bind(this);
-  }
-
-  delete() {
+  delete = () => {
     const { todo, deleteTodo } = this.props;
     deleteTodo(todo.id);
-  }
+  };
 
   render() {
     const { todo } = this.props;

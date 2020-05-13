@@ -3,21 +3,17 @@ import { v4 as uuidv4 } from "uuid";
 import "./App.css";
 import TodoItem from "./TodoItem";
 import Todo from "./Todo";
+import cookies from "js-cookie";
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      todos: [],
-      todoText: "",
-    };
-    this.addTodo = this.addTodo.bind(this);
-    this.deleteTodo = this.deleteTodo.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-  }
+  state = {
+    todos: [],
+    todoText: "",
+  };
+  id = 1;
 
   componentDidMount() {
-    const todoData = window.localStorage.getItem("todoapp");
+    const todoData = cookies.get("todoapp");
     if (todoData) {
       const oldTodos = JSON.parse(todoData);
       this.setState({
@@ -28,10 +24,10 @@ class App extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.todos !== this.state.todos) {
-      window.localStorage.setItem("todoapp", JSON.stringify(this.state.todos));
+      cookies.set("todoapp", JSON.stringify(this.state.todos));
     }
   }
-  addTodo() {
+  addTodo = () => {
     const { todos, todoText } = this.state;
     if (todoText.replace(/\s*/g, "") !== "") {
       this.setState({
@@ -39,19 +35,19 @@ class App extends React.Component {
         todoText: "",
       });
     }
-  }
+  };
 
-  deleteTodo(id) {
+  deleteTodo = (id) => {
     this.setState({
       todos: this.state.todos.filter((todo) => todo.id !== id),
     });
-  }
+  };
 
-  handleChange(e) {
+  handleChange = (e) => {
     this.setState({
       todoText: e.target.value,
     });
-  }
+  };
 
   render() {
     const { todos, todoText } = this.state;
