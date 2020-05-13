@@ -10,7 +10,6 @@ class App extends React.Component {
     todos: [],
     todoText: "",
   };
-  id = 1;
 
   componentDidMount() {
     const todoData = cookies.get("todoapp");
