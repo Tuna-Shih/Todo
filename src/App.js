@@ -1,18 +1,18 @@
-import React from "react";
-import { v4 as uuidv4 } from "uuid";
-import "./App.css";
-import TodoItem from "./TodoItem";
-import Todo from "./Todo";
-import cookies from "js-cookie";
+import React from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import './App.css';
+import TodoItem from './TodoItem';
+import Todo from './Todo';
+import cookies from 'js-cookie';
 
 class App extends React.Component {
   state = {
     todos: [],
-    todoText: "",
+    todoText: '',
   };
 
   componentDidMount() {
-    const todoData = cookies.get("todoapp");
+    const todoData = cookies.get('todoapp');
     if (todoData) {
       const oldTodos = JSON.parse(todoData);
       this.setState({
@@ -23,26 +23,26 @@ class App extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.todos !== this.state.todos) {
-      cookies.set("todoapp", JSON.stringify(this.state.todos));
+      cookies.set('todoapp', JSON.stringify(this.state.todos));
     }
   }
   addTodo = () => {
     const { todos, todoText } = this.state;
-    if (todoText.replace(/\s*/g, "") !== "") {
+    if (todoText.replace(/\s*/g, '') !== '') {
       this.setState({
         todos: [...todos, { id: uuidv4(), text: todoText }],
-        todoText: "",
+        todoText: '',
       });
     }
   };
 
-  deleteTodo = (id) => {
+  deleteTodo = id => {
     this.setState({
-      todos: this.state.todos.filter((todo) => todo.id !== id),
+      todos: this.state.todos.filter(todo => todo.id !== id),
     });
   };
 
-  handleChange = (e) => {
+  handleChange = e => {
     this.setState({
       todoText: e.target.value,
     });
@@ -61,9 +61,9 @@ class App extends React.Component {
         </div>
         <h2>Todo!</h2>
         <div className="list">
-          {todos.map((todo) => (
+          {todos.map(todo => 
             <Todo key={todo.id} todo={todo} deleteTodo={this.deleteTodo} />
-          ))}
+          )}
         </div>
       </div>
     );
