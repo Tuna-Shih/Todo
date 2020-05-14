@@ -1,8 +1,9 @@
-import React from "react";
+import React from 'react';
 
 class Todo extends React.Component {
   state = {
     isEdit: false,
+    editText: this.props.todo.text,
   };
 
   delete = () => {
@@ -16,7 +17,7 @@ class Todo extends React.Component {
     });
   };
 
-  handleChange = (e) => {
+  handleChange = e => {
     this.setState({
       editText: e.target.value,
     });
@@ -34,29 +35,29 @@ class Todo extends React.Component {
 
   render() {
     const { todo } = this.props;
-    const { isEdit } = this.state;
+    const { isEdit, editText } = this.state;
 
     return (
-      <div className="list-item">
-        <div className="list-item__content">{todo.text}</div>
+      <div className='list-item'>
+        <div className='list-item__content'>{todo.text}</div>
         <div>
-          <div className="list-item__state">
-            <button className="delete" onClick={this.delete}>
+          <div className='list-item__state'>
+            <button className='delete' onClick={this.delete}>
               Delete
             </button>
-            <button className="edit" onClick={this.toggle}>
-              {isEdit ? "Editing" : "Edit"}
+            <button className='edit' onClick={this.toggle}>
+              {isEdit ? 'Editing' : 'Edit'}
             </button>
           </div>
-          <div className="edit-input">
+          <div className='edit-input'>
             {isEdit ? (
               <div>
                 <input
-                  type="text"
-                  valur={todo.text}
+                  type='text'
+                  value={editText}
                   onChange={this.handleChange}
                 />
-                <button className="submit" onClick={this.submit}>
+                <button className='submit' onClick={this.submit}>
                   Submit
                 </button>
               </div>
