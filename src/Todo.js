@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 class Todo extends React.Component {
   delete = () => {
@@ -20,5 +21,10 @@ class Todo extends React.Component {
     );
   }
 }
+
+Todo.propTypes = {
+  todo: PropTypes.object,
+  deleteTodo: PropTypes.func,
+};
 
 export default Todo;

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 class TodoItem extends React.Component {
   handle = (e) => {
@@ -28,5 +29,11 @@ class TodoItem extends React.Component {
     );
   }
 }
+
+TodoItem.propTypes = {
+  todoText: PropTypes.string,
+  addTodo: PropTypes.func,
+  handleChange: PropTypes.func,
+};
 
 export default TodoItem;
