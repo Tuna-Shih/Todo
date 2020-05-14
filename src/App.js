@@ -51,8 +51,8 @@ class App extends React.Component {
   render() {
     const { todos, todoText } = this.state;
     return (
-      <div className="wrapper">
-        <div className="add">
+      <div className='wrapper'>
+        <div className='add'>
           <TodoItem
             todoText={todoText}
             addTodo={this.addTodo}
@@ -60,10 +60,10 @@ class App extends React.Component {
           />
         </div>
         <h2>Todo!</h2>
-        <div className="list">
-          {todos.map(todo => 
+        <div className='list'>
+          {todos.map(todo => (
             <Todo key={todo.id} todo={todo} deleteTodo={this.deleteTodo} />
-          )}
+          ))}
         </div>
       </div>
     );

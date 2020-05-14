@@ -10,10 +10,10 @@ class Todo extends React.Component {
   render() {
     const { todo } = this.props;
     return (
-      <div className="list-item">
-        <div className="list-item__content">{todo.text}</div>
-        <div className="list-item__state">
-          <button className="delete" onClick={this.delete}>
+      <div className='list-item'>
+        <div className='list-item__content'>{todo.text}</div>
+        <div className='list-item__state'>
+          <button className='delete' onClick={this.delete}>
             Delete
           </button>
         </div>
