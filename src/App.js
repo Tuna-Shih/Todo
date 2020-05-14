@@ -48,9 +48,11 @@ class App extends React.Component {
     });
   };
 
-  handleSubmit = (id, editTodo) => {
+  editTodo = (id, edit) => {
     this.setState({
-      todos: this.state.todos.map((todo) => (todo.id === id ? editTodo : todo)),
+      todos: this.state.todos.map((todo) =>
+        todo.id === id && edit.text.replace(/\s*/g, "") !== "" ? edit : todo
+      ),
     });
   };
 
@@ -72,7 +74,7 @@ class App extends React.Component {
               key={todo.id}
               todo={todo}
               deleteTodo={this.deleteTodo}
-              handleSubmit={this.handleSubmit}
+              editTodo={this.editTodo}
             />
           ))}
         </div>

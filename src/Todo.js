@@ -10,7 +10,7 @@ class Todo extends React.Component {
     deleteTodo(todo.id);
   };
 
-  edit = () => {
+  toggle = () => {
     this.setState({
       isEdit: !this.state.isEdit,
     });
@@ -23,10 +23,10 @@ class Todo extends React.Component {
   };
 
   submit = () => {
-    const { todo, handleSubmit } = this.props;
+    const { todo, editTodo } = this.props;
     const { editText } = this.state;
-    const editTodo = { id: todo.id, text: editText };
-    handleSubmit(todo.id, editTodo);
+    const edit = { id: todo.id, text: editText };
+    editTodo(todo.id, edit);
     this.setState({
       isEdit: !this.state.isEdit,
     });
@@ -39,25 +39,29 @@ class Todo extends React.Component {
     return (
       <div className="list-item">
         <div className="list-item__content">{todo.text}</div>
-        <div className="list-item__state">
-          <button className="delete" onClick={this.delete}>
-            Delete
-          </button>
-          <button className="edit" onClick={this.edit}>
-            {isEdit ? "Editing" : "Edit"}
-          </button>
-          <input
-            type="text"
-            style={isEdit ? {} : { display: "none" }}
-            onChange={this.handleChange}
-            placeholder={todo.text}
-          />
-          <button
-            className="submit"
-            style={isEdit ? {} : { display: "none" }}
-            onClick={this.submit}>
-            Submit
-          </button>
+        <div>
+          <div className="list-item__state">
+            <button className="delete" onClick={this.delete}>
+              Delete
+            </button>
+            <button className="edit" onClick={this.toggle}>
+              {isEdit ? "Editing" : "Edit"}
+            </button>
+          </div>
+          <div className="edit-input">
+            {isEdit ? (
+              <div>
+                <input
+                  type="text"
+                  valur={todo.text}
+                  onChange={this.handleChange}
+                />
+                <button className="submit" onClick={this.submit}>
+                  Submit
+                </button>
+              </div>
+            ) : null}
+          </div>
         </div>
       </div>
     );
