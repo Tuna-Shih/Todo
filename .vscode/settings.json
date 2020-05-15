@@ -1,22 +1,13 @@
 {
   "emmet.triggerExpansionOnTab": true, // 解決EMMET失效
-  "liveServer.settings.donotShowInfoMsg": true,
-  "explorer.confirmDelete": false,
   "emmet.includeLanguages": {
     "vue-html": "html",
     "javascript": "javascriptreact"
   },
-  "workbench.settings.openDefaultKeybindings": true,
-  "json.schemas": [],
-  "terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
-  "editor.suggestSelection": "first",
-  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-  "explorer.confirmDragAndDrop": false,
-  "git.autofetch": true,
-  "eslint.codeAction.disableRuleComment": {},
-  "eslint.codeAction.showDocumentation": {},
+
   "editor.formatOnSave": true,
-  "prettier.jsxBracketSameLine": true,
-  "prettier.arrowParens": "avoid",
-  "prettier.singleQuote": true
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }
