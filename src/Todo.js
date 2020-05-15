@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
 class Todo extends React.Component {
   delete = () => {
@@ -10,10 +10,10 @@ class Todo extends React.Component {
   render() {
     const { todo } = this.props;
     return (
-      <div className='list-item'>
-        <div className='list-item__content'>{todo.text}</div>
-        <div className='list-item__state'>
-          <button className='delete' onClick={this.delete}>
+      <div className="list-item">
+        <div className="list-item__content">{todo.text}</div>
+        <div className="list-item__state">
+          <button className="delete" onClick={this.delete}>
             Delete
           </button>
         </div>
@@ -23,7 +23,10 @@ class Todo extends React.Component {
 }
 
 Todo.propTypes = {
-  todo: PropTypes.object,
+  todo: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    text: PropTypes.string.isRequired,
+  }),
   deleteTodo: PropTypes.func,
 };
 

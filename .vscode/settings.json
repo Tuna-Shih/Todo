@@ -1,4 +1,4 @@
- {
+{
   "editor.formatOnSave": true, // 儲存執行prettier
   "emmet.triggerExpansionOnTab": true, // 解決EMMET失效
   "emmet.includeLanguages": {

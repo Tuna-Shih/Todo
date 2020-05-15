@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
 class TodoItem extends React.Component {
-  handle = (e) => {
+  handle = e => {
     const { handleChange } = this.props;
     handleChange(e);
   };
@@ -31,9 +31,9 @@ class TodoItem extends React.Component {
 }
 
 TodoItem.propTypes = {
-  todoText: PropTypes.string,
-  addTodo: PropTypes.func,
-  handleChange: PropTypes.func,
+  todoText: PropTypes.string.isRequired,
+  addTodo: PropTypes.func.isRequired,
+  handleChange: PropTypes.func.isRequired,
 };
 
 export default TodoItem;
