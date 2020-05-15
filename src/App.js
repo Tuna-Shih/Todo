@@ -8,7 +8,7 @@ import cookies from 'js-cookie';
 class App extends React.Component {
   state = {
     todos: [],
-    todoText: '',
+    todoText: ''
   };
 
   componentDidMount() {
@@ -16,7 +16,7 @@ class App extends React.Component {
     if (todoData) {
       const oldTodos = JSON.parse(todoData);
       this.setState({
-        todos: oldTodos,
+        todos: oldTodos
       });
     }
   }
@@ -31,20 +31,20 @@ class App extends React.Component {
     if (todoText.replace(/\s*/g, '') !== '') {
       this.setState({
         todos: [...todos, { id: uuidv4(), text: todoText }],
-        todoText: '',
+        todoText: ''
       });
     }
   };
 
   deleteTodo = id => {
     this.setState({
-      todos: this.state.todos.filter(todo => todo.id !== id),
+      todos: this.state.todos.filter(todo => todo.id !== id)
     });
   };
 
   handleChange = e => {
     this.setState({
-      todoText: e.target.value,
+      todoText: e.target.value
     });
   };
 
@@ -52,7 +52,7 @@ class App extends React.Component {
     this.setState({
       todos: this.state.todos.map(todo =>
         todo.id === id && edit.text.replace(/\s*/g, '') !== '' ? edit : todo
-      ),
+      )
     });
   };
 

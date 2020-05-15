@@ -3,7 +3,7 @@ import React from 'react';
 class Todo extends React.Component {
   state = {
     isEdit: false,
-    editText: this.props.todo.text,
+    editText: this.props.todo.text
   };
 
   delete = () => {
@@ -13,13 +13,13 @@ class Todo extends React.Component {
 
   toggle = () => {
     this.setState({
-      isEdit: !this.state.isEdit,
+      isEdit: !this.state.isEdit
     });
   };
 
   handleChange = e => {
     this.setState({
-      editText: e.target.value,
+      editText: e.target.value
     });
   };
 
@@ -29,7 +29,7 @@ class Todo extends React.Component {
     const edit = { id: todo.id, text: editText };
     editTodo(todo.id, edit);
     this.setState({
-      isEdit: !this.state.isEdit,
+      isEdit: !this.state.isEdit
     });
   };
 
