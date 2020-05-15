@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 class Todo extends React.Component {
   state = {
@@ -46,7 +46,7 @@ class Todo extends React.Component {
               Delete
             </button>
             <button className="edit" onClick={this.toggle}>
-              {isEdit ? "Editing" : "Edit"}
+              {isEdit ? 'Editing' : 'Edit'}
             </button>
           </div>
           <div className="edit-input">
