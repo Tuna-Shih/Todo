@@ -1,7 +1,7 @@
 import React from "react";
 
 class TodoItem extends React.Component {
-  handle = (e) => {
+  handle = e => {
     const { handleChange } = this.props;
     handleChange(e);
   };

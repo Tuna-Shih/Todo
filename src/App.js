@@ -36,13 +36,13 @@ class App extends React.Component {
     }
   };
 
-  deleteTodo = (id) => {
+  deleteTodo = id => {
     this.setState({
-      todos: this.state.todos.filter((todo) => todo.id !== id),
+      todos: this.state.todos.filter(todo => todo.id !== id),
     });
   };
 
-  handleChange = (e) => {
+  handleChange = e => {
     this.setState({
       todoText: e.target.value,
     });
@@ -50,7 +50,7 @@ class App extends React.Component {
 
   editTodo = (id, edit) => {
     this.setState({
-      todos: this.state.todos.map((todo) =>
+      todos: this.state.todos.map(todo =>
         todo.id === id && edit.text.replace(/\s*/g, "") !== "" ? edit : todo
       ),
     });
@@ -69,7 +69,7 @@ class App extends React.Component {
         </div>
         <h2>Todo!</h2>
         <div className="list">
-          {todos.map((todo) => (
+          {todos.map(todo => (
             <Todo
               key={todo.id}
               todo={todo}
