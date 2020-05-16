@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class Todo extends React.Component {
   state = {
@@ -68,5 +69,14 @@ class Todo extends React.Component {
     );
   }
 }
+
+Todo.propTypes = {
+  todo: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    text: PropTypes.string.isRequired
+  }),
+  deleteTodo: PropTypes.func.isRequired,
+  editTodo: PropTypes.func.isRequired
+};
 
 export default Todo;
