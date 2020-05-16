@@ -74,7 +74,7 @@ Todo.propTypes = {
   todo: PropTypes.shape({
     id: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired
-  }),
+  }).isRequired,
   deleteTodo: PropTypes.func.isRequired,
   editTodo: PropTypes.func.isRequired
 };
