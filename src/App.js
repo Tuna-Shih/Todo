@@ -10,31 +10,48 @@ class App extends React.Component {
     todos: [],
     todoText: '',
     items: 10,
+    oldTodos: [],
     loading: false
   };
 
   componentDidMount() {
     const todoData = cookies.get('todoapp');
     if (todoData) {
-      const oldTodos = JSON.parse(todoData);
+      const old = JSON.parse(todoData);
       this.setState({
-        todos: oldTodos
+        oldTodos: old,
+        todos: old.filter((todo, index) => index < this.state.items),
+        items: 10
       });
     }
+
+    this.refs.myscroll.addEventListener('scroll', () => {
+      if (
+        this.refs.myscroll.scrollTop + 1 + this.refs.myscroll.clientHeight >=
+        this.refs.myscroll.scrollHeight
+      ) {
+        const { oldTodos } = this.state;
+        if (this.state.items <= oldTodos.length) {
+          this.loadMore();
+        }
+      }
+    });
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevState) {
     if (prevState.todos !== this.state.todos) {
-      cookies.set('todoapp', JSON.stringify(this.state.todos));
+      cookies.set('todoapp', JSON.stringify(this.state.oldTodos));
     }
   }
 
   addTodo = () => {
-    const { todos, todoText } = this.state;
+    const { oldTodos, todos, todoText, items } = this.state;
     if (todoText.replace(/\s*/g, '') !== '') {
       this.setState({
         todos: [{ id: uuidv4(), text: todoText }, ...todos],
-        todoText: ''
+        todoText: '',
+        items: items + 1,
+        oldTodos: [{ id: uuidv4(), text: todoText }, ...oldTodos]
       });
     }
   };
@@ -59,8 +76,24 @@ class App extends React.Component {
     });
   };
 
+  loadMore = () => {
+    const { oldTodos, todos } = this.state;
+    this.setState({ items: this.state.items + 10, loading: true });
+    setTimeout(() => {
+      this.setState({
+        todos: todos.concat(
+          oldTodos.filter(
+            (todo, index) =>
+              index >= this.state.items - 10 && index < this.state.items
+          )
+        ),
+        loading: false
+      });
+    }, 100);
+  };
+
   render() {
-    const { todos, todoText } = this.state;
+    const { todos, todoText, loading } = this.state;
 
     return (
       <div className="wrapper">
@@ -72,7 +105,7 @@ class App extends React.Component {
           />
         </div>
         <h2>Todo!</h2>
-        <div className="list">
+        <div className="list" ref="myscroll">
           {todos.map(todo => (
             <TodoList
               key={todo.id}
@@ -81,6 +114,7 @@ class App extends React.Component {
               editTodo={this.editTodo}
             />
           ))}
+          {loading ? <p className="App-intro">loading ...</p> : ''}
         </div>
       </div>
     );

@@ -4,16 +4,21 @@
 }
 
 .list {
-  height: 700px;
+  border: 1px solid black;
+  margin-top: 1px;
+  height: 230px;
   overflow: auto;
 }
 .list-item {
+  border-bottom: 1px solid black;
   display: flex;
+  bottom: 1px;
   position: relative;
 }
 
 .list-item__content {
   position: relative;
+
   left: 1px;
   margin-bottom: 1px;
   margin-right: 10px;
