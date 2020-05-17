@@ -2,13 +2,15 @@ import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import './App.css';
 import TodoItem from './TodoItem';
-import Todo from './Todo';
+import TodoList from './TodoList';
 import cookies from 'js-cookie';
 
 class App extends React.Component {
   state = {
     todos: [],
-    todoText: ''
+    todoText: '',
+    items: 10,
+    loading: false
   };
 
   componentDidMount() {
@@ -26,11 +28,12 @@ class App extends React.Component {
       cookies.set('todoapp', JSON.stringify(this.state.todos));
     }
   }
+
   addTodo = () => {
     const { todos, todoText } = this.state;
     if (todoText.replace(/\s*/g, '') !== '') {
       this.setState({
-        todos: [...todos, { id: uuidv4(), text: todoText }],
+        todos: [{ id: uuidv4(), text: todoText }, ...todos],
         todoText: ''
       });
     }
@@ -58,6 +61,7 @@ class App extends React.Component {
 
   render() {
     const { todos, todoText } = this.state;
+
     return (
       <div className="wrapper">
         <div className="add">
@@ -70,7 +74,7 @@ class App extends React.Component {
         <h2>Todo!</h2>
         <div className="list">
           {todos.map(todo => (
-            <Todo
+            <TodoList
               key={todo.id}
               todo={todo}
               deleteTodo={this.deleteTodo}

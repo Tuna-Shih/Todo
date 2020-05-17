@@ -4,8 +4,8 @@
 }
 
 .list {
-  border: 1px solid black;
-  margin-top: 1px;
+  height: 700px;
+  overflow: auto;
 }
 .list-item {
   display: flex;
