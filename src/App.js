@@ -1,56 +1,100 @@
-import React from "react";
-import "./App.css";
-import TodoItem from "./TodoItem";
-import Todo from "./Todo";
-import cookies from "js-cookie";
+import React from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import './App.css';
+import TodoItem from './TodoItem';
+import TodoList from './TodoList';
+import cookies from 'js-cookie';
 
 class App extends React.Component {
   state = {
     todos: [],
-    todoText: "",
+    todoText: '',
+    items: 10,
+    oldTodos: [],
+    loading: false
   };
-  id = 1;
 
   componentDidMount() {
-    const todoData = cookies.get("todoapp");
+    const todoData = cookies.get('todoapp');
     if (todoData) {
-      const oldTodos = JSON.parse(todoData);
+      const old = JSON.parse(todoData);
       this.setState({
-        todos: oldTodos,
+        oldTodos: old,
+        todos: old.filter((todo, index) => index < this.state.items),
+        items: 10
       });
     }
+
+    this.refs.myscroll.addEventListener('scroll', () => {
+      if (
+        this.refs.myscroll.scrollTop + 1 + this.refs.myscroll.clientHeight >=
+        this.refs.myscroll.scrollHeight
+      ) {
+        const { oldTodos } = this.state;
+        if (this.state.items <= oldTodos.length) {
+          this.loadMore();
+        }
+      }
+    });
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevState) {
     if (prevState.todos !== this.state.todos) {
-      cookies.set("todoapp", JSON.stringify(this.state.todos));
+      cookies.set('todoapp', JSON.stringify(this.state.oldTodos));
     }
   }
+
   addTodo = () => {
-    const { todos, todoText } = this.state;
-    if (todoText.replace(/\s*/g, "") !== "") {
+    const { oldTodos, todos, todoText, items } = this.state;
+    if (todoText.replace(/\s*/g, '') !== '') {
       this.setState({
-        todos: [...todos, { id: this.id, text: todoText }],
-        todoText: "",
+        todos: [{ id: uuidv4(), text: todoText }, ...todos],
+        todoText: '',
+        items: items + 1,
+        oldTodos: [{ id: uuidv4(), text: todoText }, ...oldTodos]
       });
-      this.id++;
     }
   };
 
-  deleteTodo = (id) => {
+  deleteTodo = id => {
     this.setState({
-      todos: this.state.todos.filter((todo) => todo.id !== id),
+      todos: this.state.todos.filter(todo => todo.id !== id)
     });
   };
 
-  handleChange = (e) => {
+  handleChange = e => {
     this.setState({
-      todoText: e.target.value,
+      todoText: e.target.value
     });
+  };
+
+  editTodo = (id, edit) => {
+    this.setState({
+      todos: this.state.todos.map(todo =>
+        todo.id === id && edit.text.replace(/\s*/g, '') !== '' ? edit : todo
+      )
+    });
+  };
+
+  loadMore = () => {
+    const { oldTodos, todos } = this.state;
+    this.setState({ items: this.state.items + 10, loading: true });
+    setTimeout(() => {
+      this.setState({
+        todos: todos.concat(
+          oldTodos.filter(
+            (todo, index) =>
+              index >= this.state.items - 10 && index < this.state.items
+          )
+        ),
+        loading: false
+      });
+    }, 100);
   };
 
   render() {
-    const { todos, todoText } = this.state;
+    const { todos, todoText, loading } = this.state;
+
     return (
       <div className="wrapper">
         <div className="add">
@@ -61,10 +105,16 @@ class App extends React.Component {
           />
         </div>
         <h2>Todo!</h2>
-        <div className="list">
-          {todos.map((todo) => (
-            <Todo key={todo.id} todo={todo} deleteTodo={this.deleteTodo} />
+        <div className="list" ref="myscroll">
+          {todos.map(todo => (
+            <TodoList
+              key={todo.id}
+              todo={todo}
+              deleteTodo={this.deleteTodo}
+              editTodo={this.editTodo}
+            />
           ))}
+          {loading ? <p className="App-intro">loading ...</p> : ''}
         </div>
       </div>
     );
