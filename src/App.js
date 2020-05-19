@@ -2,7 +2,7 @@ import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import './App.css';
 import TodoItem from './TodoItem';
-import Todo from './Todo';
+import TodoList from './TodoList';
 import axios from 'axios';
 
 class App extends React.Component {
@@ -19,7 +19,7 @@ class App extends React.Component {
     axios.get('http://localhost:3003/todos').then(res => {
       res.data.reverse();
       this.setState({
-        // jsonLength: res.data.length,
+        jsonLength: res.data.length,
         todos: res.data.filter((todo, index) => index < this.state.count)
       });
     });
@@ -93,8 +93,25 @@ class App extends React.Component {
     });
   };
 
+  loadMore = () => {
+    const { oldTodos, todos } = this.state;
+    this.setState({ items: this.state.items + 10, loading: true });
+    setTimeout(() => {
+      this.setState({
+        todos: todos.concat(
+          oldTodos.filter(
+            (todo, index) =>
+              index >= this.state.items - 10 && index < this.state.items
+          )
+        ),
+        loading: false
+      });
+    }, 100);
+  };
+
   render() {
-    const { todos, todoText } = this.state;
+    const { todos, todoText, loading } = this.state;
+
     return (
       <div className="wrapper">
         <button onClick={this.loadMore}>XD</button>
@@ -108,13 +125,14 @@ class App extends React.Component {
         <h2> {todos.length} Todo! </h2>
         <div className="list" ref={this.myscroll}>
           {todos.map(todo => (
-            <Todo
+            <TodoList
               key={todo.id}
               todo={todo}
               deleteTodo={this.deleteTodo}
               editTodo={this.editTodo}
             />
           ))}
+          {loading ? <p className="App-intro">loading ...</p> : ''}
         </div>
       </div>
     );
