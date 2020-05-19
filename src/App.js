@@ -50,11 +50,6 @@ class App extends React.Component {
         jsonLength: jsonLength + 1
       });
       axios.post('http://localhost:3003/todos', todo);
-      console.log(
-        window.innerHeight,
-        window.scrollY,
-        document.body.scrollHeight
-      );
     }
   };
 
@@ -93,28 +88,11 @@ class App extends React.Component {
     });
   };
 
-  loadMore = () => {
-    const { oldTodos, todos } = this.state;
-    this.setState({ items: this.state.items + 10, loading: true });
-    setTimeout(() => {
-      this.setState({
-        todos: todos.concat(
-          oldTodos.filter(
-            (todo, index) =>
-              index >= this.state.items - 10 && index < this.state.items
-          )
-        ),
-        loading: false
-      });
-    }, 100);
-  };
-
   render() {
-    const { todos, todoText, loading } = this.state;
+    const { todos, todoText } = this.state;
 
     return (
       <div className="wrapper">
-        <button onClick={this.loadMore}>XD</button>
         <div className="add">
           <TodoItem
             todoText={todoText}
@@ -123,7 +101,7 @@ class App extends React.Component {
           />
         </div>
         <h2> {todos.length} Todo! </h2>
-        <div className="list" ref={this.myscroll}>
+        <div className="list">
           {todos.map(todo => (
             <TodoList
               key={todo.id}
@@ -132,7 +110,6 @@ class App extends React.Component {
               editTodo={this.editTodo}
             />
           ))}
-          {loading ? <p className="App-intro">loading ...</p> : ''}
         </div>
       </div>
     );
