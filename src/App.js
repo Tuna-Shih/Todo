@@ -93,6 +93,22 @@ class App extends React.Component {
     });
   };
 
+  loadMore = () => {
+    const { oldTodos, todos } = this.state;
+    this.setState({ items: this.state.items + 10, loading: true });
+    setTimeout(() => {
+      this.setState({
+        todos: todos.concat(
+          oldTodos.filter(
+            (todo, index) =>
+              index >= this.state.items - 10 && index < this.state.items
+          )
+        ),
+        loading: false
+      });
+    }, 100);
+  };
+
   render() {
     const { todos, todoText, loading } = this.state;
 
