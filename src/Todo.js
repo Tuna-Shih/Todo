@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-class TodoList extends React.Component {
+class Todo extends React.Component {
   state = {
     isEdit: false,
     editText: this.props.todo.text
@@ -70,7 +70,7 @@ class TodoList extends React.Component {
   }
 }
 
-TodoList.propTypes = {
+Todo.propTypes = {
   todo: PropTypes.shape({
     id: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired
@@ -79,4 +79,4 @@ TodoList.propTypes = {
   editTodo: PropTypes.func.isRequired
 };
 
-export default TodoList;
+export default Todo;
