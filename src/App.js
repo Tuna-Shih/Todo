@@ -2,35 +2,19 @@ import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import './App.css';
 import TodoItem from './TodoItem';
-import TodoList from './TodoList';
-import axios from 'axios';
+import Todo from './Todo';
+import cookies from 'js-cookie';
 
 class App extends React.Component {
   state = {
     todos: [],
     todoText: '',
-    count: 25
-    // autoRenderMore: true
+    start: 30
   };
 
   componentDidMount() {
-    // const { autoRenderMore } = this.state;
-
-    axios.get('http://localhost:3003/todos').then(res => {
-      res.data.reverse();
-      this.setState({
-        jsonLength: res.data.length,
-        todos: res.data.filter((todo, index) => index < this.state.count)
-      });
-    });
-
-    // if (autoRenderMore) {
-    //   if (window.innerHeight >= document.body.scrollHeight) {
-    //     this.loadMore();
-    //   } else {
-    //     this.setState({ autoRenderMore: !autoRenderMore });
-    //   }
-    // }
+    const { start } = this.state;
+    this.loadData(start);
 
     document.addEventListener('scroll', () => {
       if (window.innerHeight + window.scrollY >= document.body.scrollHeight) {
@@ -40,26 +24,39 @@ class App extends React.Component {
   }
 
   addTodo = () => {
-    const { todos, todoText, count, jsonLength } = this.state;
+    const { todos, todoText } = this.state;
     if (todoText.replace(/\s*/g, '') !== '') {
       const todo = { id: uuidv4(), text: todoText };
+      const newTodos = [todo, ...todos];
+
       this.setState({
-        todos: [todo, ...todos],
-        todoText: '',
-        count: count + 1,
-        jsonLength: jsonLength + 1
+        todos: newTodos,
+        todoText: ''
       });
-      axios.post('http://localhost:3003/todos', todo);
+      cookies.set('todoapp', JSON.stringify(newTodos));
     }
   };
 
   deleteTodo = id => {
+    const { todos } = this.state;
+    const newTodos = todos.filter(todo => todo.id !== id);
+
     this.setState({
-      todos: this.state.todos.filter(todo => todo.id !== id),
-      count: this.state.count - 1,
-      jsonLength: this.state.jsonLength - 1
+      todos: newTodos
     });
-    axios.delete(`http://localhost:3003/todos/${id}`);
+    cookies.set('todoapp', JSON.stringify(newTodos));
+  };
+
+  editTodo = (id, edit) => {
+    const { todos } = this.state;
+    const newTodos = todos.map(todo =>
+      todo.id === id && edit.text.replace(/\s*/g, '') !== '' ? edit : todo
+    );
+
+    this.setState({
+      todos: newTodos
+    });
+    cookies.set('todoapp', JSON.stringify(newTodos));
   };
 
   handleChange = e => {
@@ -68,24 +65,32 @@ class App extends React.Component {
     });
   };
 
-  editTodo = (id, edit) => {
-    this.setState({
-      todos: this.state.todos.map(todo =>
-        todo.id === id && edit.text.replace(/\s*/g, '') !== '' ? edit : todo
-      )
-    });
-    axios.patch(`http://localhost:3003/todos/${id}`, edit);
+  loadData = (first, after) => {
+    const getData = cookies.get('todoapp');
+
+    if (getData) {
+      const todoData = JSON.parse(getData);
+      const fil = todoData.filter((todo, index) => index < first + 1);
+      this.setState({ todos: fil });
+      if (after !== undefined) {
+        const loadRange = todoData.filter(
+          (todo, index) => index > first && index <= first + after
+        );
+        this.setState({ todos: loadRange });
+      }
+    }
   };
 
   loadMore = () => {
-    const { count } = this.state;
-    axios.get('http://localhost:3003/todos').then(res => {
-      res.data.reverse();
-      this.setState({
-        count: count + 10,
-        todos: res.data.filter((todo, index) => index < count + 10)
-      });
-    });
+    const { start, todos } = this.state;
+    const preTodos = todos;
+
+    this.loadData(start, 10);
+    const moreData = this.state.todos;
+
+    const newStart = start + 10;
+    const conCatData = preTodos.concat(moreData);
+    this.setState({ todos: conCatData, start: newStart });
   };
 
   render() {
@@ -103,7 +108,7 @@ class App extends React.Component {
         <h2> {todos.length} Todo! </h2>
         <div className="list">
           {todos.map(todo => (
-            <TodoList
+            <Todo
               key={todo.id}
               todo={todo}
               deleteTodo={this.deleteTodo}
