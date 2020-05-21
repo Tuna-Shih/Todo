@@ -13,9 +13,6 @@ class App extends React.Component {
   };
 
   componentDidMount() {
-    const { start } = this.state;
-    this.loadData(start);
-
     this.autoLoad();
 
     document.addEventListener('scroll', () => {
@@ -70,37 +67,33 @@ class App extends React.Component {
   loadData = (first, after) => {
     const getData = cookies.get('todoapp');
 
-    if (getData) {
-      const todoData = JSON.parse(getData);
-      let fil = todoData.filter((todo, index) => index < first);
+    if (!getData) return [];
 
-      if (after !== undefined) {
-        const ind = todoData.findIndex(todo => todo.id === after);
-        fil = todoData.filter(
-          (todo, index) => index > ind && index <= ind + first
-        );
-      }
+    const todoData = JSON.parse(getData);
 
-      this.setState({ todos: fil });
-    }
+    const startIndex = !after
+      ? 0
+      : todoData.findIndex(todo => todo.id === after);
+
+    return todoData.slice(startIndex + 1, startIndex + first);
   };
 
-  loadMore = () => {
-    const { start } = this.state;
-    const newStart = start + 10;
+  loadMore = callback => {
+    const { endCursor, todos } = this.state;
+    const gotData = this.loadData(10, endCursor);
 
-    this.loadData(newStart);
-
-    this.setState({ start: newStart });
+    if (gotData.length === 0) return;
+    const lastID = gotData.length - 1;
+    const newTodo = [...todos, ...gotData];
+    this.setState({ endCursor: gotData[lastID].id, todos: newTodo }, () => {
+      if (!callback) return;
+      callback();
+    });
   };
 
   autoLoad = () => {
-    if (window.innerHeight >= document.body.scrollHeight) {
-      this.loadMore();
-      setTimeout(() => {
-        return this.autoLoad();
-      }, 1000);
-    }
+    if (window.innerHeight < document.body.scrollHeight) return;
+    this.loadMore(this.autoLoad);
   };
 
   render() {
