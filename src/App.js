@@ -9,12 +9,14 @@ class App extends React.Component {
   state = {
     todos: [],
     todoText: '',
-    start: 30
+    start: 10
   };
 
   componentDidMount() {
     const { start } = this.state;
     this.loadData(start);
+
+    this.autoLoad();
 
     document.addEventListener('scroll', () => {
       if (window.innerHeight + window.scrollY >= document.body.scrollHeight) {
@@ -70,27 +72,35 @@ class App extends React.Component {
 
     if (getData) {
       const todoData = JSON.parse(getData);
-      const fil = todoData.filter((todo, index) => index < first + 1);
-      this.setState({ todos: fil });
+      let fil = todoData.filter((todo, index) => index < first);
+
       if (after !== undefined) {
-        const loadRange = todoData.filter(
-          (todo, index) => index > first && index <= first + after
+        const ind = todoData.findIndex(todo => todo.id === after);
+        fil = todoData.filter(
+          (todo, index) => index > ind && index <= ind + first
         );
-        this.setState({ todos: loadRange });
       }
+
+      this.setState({ todos: fil });
     }
   };
 
   loadMore = () => {
-    const { start, todos } = this.state;
-    const preTodos = todos;
-
-    this.loadData(start, 10);
-    const moreData = this.state.todos;
-
+    const { start } = this.state;
     const newStart = start + 10;
-    const conCatData = preTodos.concat(moreData);
-    this.setState({ todos: conCatData, start: newStart });
+
+    this.loadData(newStart);
+
+    this.setState({ start: newStart });
+  };
+
+  autoLoad = () => {
+    if (window.innerHeight >= document.body.scrollHeight) {
+      this.loadMore();
+      setTimeout(() => {
+        return this.autoLoad();
+      }, 1000);
+    }
   };
 
   render() {
@@ -98,6 +108,7 @@ class App extends React.Component {
 
     return (
       <div className="wrapper">
+        <button onClick={this.loadMore}>XD</button>
         <div className="add">
           <TodoItem
             todoText={todoText}
