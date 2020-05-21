@@ -72,7 +72,7 @@ class App extends React.Component {
     const todoData = JSON.parse(getData);
 
     const startIndex = !after
-      ? 0
+      ? -1
       : todoData.findIndex(todo => todo.id === after);
 
     return todoData.slice(startIndex + 1, startIndex + first);
