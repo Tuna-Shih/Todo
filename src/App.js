@@ -8,8 +8,7 @@ import cookies from 'js-cookie';
 class App extends React.Component {
   state = {
     todos: [],
-    todoText: '',
-    start: 10
+    todoText: ''
   };
 
   componentDidMount() {
