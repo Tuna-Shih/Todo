@@ -1,6 +1,6 @@
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import './App.css';
+import './App.less';
 import TodoItem from './TodoItem';
 import Todo from './Todo';
 import cookies from 'js-cookie';
