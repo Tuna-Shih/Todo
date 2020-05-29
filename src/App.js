@@ -1,6 +1,6 @@
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import './App.less';
+import styles from './App.less';
 import TodoItem from './TodoItem';
 import Todo from './Todo';
 import cookies from 'js-cookie';
@@ -99,7 +99,7 @@ class App extends React.Component {
     const { todos, todoText } = this.state;
 
     return (
-      <div className="wrapper">
+      <div className={styles.wrapper}>
         <div className="add">
           <TodoItem
             todoText={todoText}
@@ -108,7 +108,7 @@ class App extends React.Component {
           />
         </div>
         <h2> {todos.length} Todo! </h2>
-        <div className="list">
+        <div className={styles.list}>
           {todos.map(todo => (
             <Todo
               key={todo.id}
