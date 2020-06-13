@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './App.less';
 
-console.log(styles);
-
 class Todo extends React.Component {
   state = {
     isEdit: false,
