@@ -19,15 +19,11 @@ class Todo extends React.Component {
   checkOverflow = () => {
     const isOverflow = getComputedStyle(this.myRef.current).width;
 
-    if (isOverflow == '250px') {
-      this.setState({
-        overflow: true
-      });
-    } else {
-      this.setState({
-        overflow: false
-      });
-    }
+    if (isOverflow == '250px') return this.setState({ overflow: true });
+
+    this.setState({
+      overflow: false
+    });
   };
 
   delete = () => {
