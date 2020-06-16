@@ -9,18 +9,8 @@ class TodoItem extends React.Component {
     handleChange(e);
   };
 
-  add = () => {
-    const { addTodo } = this.props;
-    addTodo();
-  };
-
-  deleteAll = () => {
-    const { deleteAllTodo } = this.props;
-    deleteAllTodo();
-  };
-
   render() {
-    const { todoText } = this.props;
+    const { todoText, addTodo, deleteAllTodo } = this.props;
     return (
       <div className={styles.add_item}>
         <Input
@@ -29,10 +19,10 @@ class TodoItem extends React.Component {
           onChange={this.handle}
           placeholder="Add Something"
         />
-        <Button type="primary" onClick={this.add}>
+        <Button type="primary" onClick={addTodo}>
           New
         </Button>
-        <Button type="primary" onClick={this.deleteAll}>
+        <Button type="primary" onClick={deleteAllTodo}>
           Del All
         </Button>
       </div>
