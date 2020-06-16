@@ -37,6 +37,15 @@ class App extends React.Component {
     }
   };
 
+  deleteAllTodo = () => {
+    const { todos } = this.state;
+    const newTodos = [];
+    this.setState({
+      todos: newTodos
+    });
+    cookies.set('todoapp', JSON.stringify(newTodos));
+  };
+
   deleteTodo = id => {
     const { todos } = this.state;
     const newTodos = todos.filter(todo => todo.id !== id);
@@ -107,6 +116,7 @@ class App extends React.Component {
             todoText={todoText}
             addTodo={this.addTodo}
             handleChange={this.handleChange}
+            deleteAllTodo={this.deleteAllTodo}
           />
         </div>
         <div>

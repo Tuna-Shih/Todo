@@ -8,6 +8,13 @@
   display: flex;
   align-items: center;
 
+  .item_content {
+    white-space: nowrap;
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   button {
     margin-left: 5px;
   }
@@ -19,5 +26,11 @@
   .edit_input {
     position: absolute;
     right: 5px;
+    display: flex;
+
+    :global(.ant-input) {
+      border: 2px solid black;
+      width: 150px;
+    }
   }
 }

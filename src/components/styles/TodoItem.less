@@ -2,13 +2,21 @@
 
 .add_item {
   display: flex;
-
   align-items: center;
   position: fixed;
   z-index: 1;
+  width: 600px;
+  background-color: white;
+  border: 2px solid black;
+  padding: 5px;
+  border-radius: 4px;
 
   :global(.ant-input) {
     border: 2px solid black;
-    margin: 0px 5px;
+    width: 100%;
+  }
+
+  button {
+    margin-left: 5px;
   }
 }

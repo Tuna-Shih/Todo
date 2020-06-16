@@ -1,12 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles/Todo.less';
-import { Button } from 'antd';
+import { Button, Input, Tooltip } from 'antd';
 
 class Todo extends React.Component {
   state = {
     isEdit: false,
-    editText: this.props.todo.text
+    editText: this.props.todo.text,
+    overflow: false
+  };
+
+  myRef = React.createRef();
+
+  componentDidMount() {
+    this.checkOverflow();
+  }
+
+  checkOverflow = () => {
+    const isOverflow = getComputedStyle(this.myRef.current).width;
+
+    if (isOverflow == '250px') {
+      this.setState({
+        overflow: true
+      });
+    } else {
+      this.setState({
+        overflow: false
+      });
+    }
   };
 
   delete = () => {
@@ -34,15 +55,25 @@ class Todo extends React.Component {
     this.setState({
       isEdit: !this.state.isEdit
     });
+    this.checkOverflow();
   };
 
   render() {
     const { todo } = this.props;
-    const { isEdit, editText } = this.state;
+    const { isEdit, editText, overflow } = this.state;
 
     return (
       <div className={styles.item}>
-        <div>{todo.text}</div>
+        <div className={styles.item_content} ref={this.myRef}>
+          {overflow ? (
+            <Tooltip title={todo.text} mouseEnterDelay={0.5}>
+              <span>{todo.text}</span>
+            </Tooltip>
+          ) : (
+            <span>{todo.text}</span>
+          )}
+        </div>
+
         <div className={isEdit ? styles.none : styles.item_state}>
           <Button type="primary" onClick={this.delete}>
             Delete
@@ -54,7 +85,7 @@ class Todo extends React.Component {
 
         {isEdit ? (
           <div className={styles.edit_input}>
-            <input type="text" value={editText} onChange={this.handleChange} />
+            <Input type="text" value={editText} onChange={this.handleChange} />
             <Button type="primary" onClick={this.submit}>
               Submit
             </Button>

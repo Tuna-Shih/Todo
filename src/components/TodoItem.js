@@ -14,6 +14,11 @@ class TodoItem extends React.Component {
     addTodo();
   };
 
+  deleteAll = () => {
+    const { deleteAllTodo } = this.props;
+    deleteAllTodo();
+  };
+
   render() {
     const { todoText } = this.props;
     return (
@@ -26,6 +31,9 @@ class TodoItem extends React.Component {
         />
         <Button type="primary" onClick={this.add}>
           New
+        </Button>
+        <Button type="primary" onClick={this.deleteAll}>
+          Del All
         </Button>
       </div>
     );
