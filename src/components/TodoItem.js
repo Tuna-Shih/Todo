@@ -4,8 +4,18 @@ import styles from './styles/TodoItem.less';
 import { Button, Input } from 'antd';
 
 class TodoItem extends React.Component {
+  handleVaildation = () => {
+    const { todoText, addTodo } = this.props;
+    if (
+      todoText.match(/[\uff00-\uffff]/g) ||
+      todoText.match(/[\u4e00-\u9fa5]/g)
+    )
+      return;
+    addTodo();
+  };
+
   render() {
-    const { todoText, addTodo, deleteAllTodo, handleChange } = this.props;
+    const { todoText, deleteAllTodo, handleChange } = this.props;
     return (
       <div className={styles.add_item}>
         <Input
@@ -13,8 +23,9 @@ class TodoItem extends React.Component {
           value={todoText}
           onChange={handleChange}
           placeholder="Add Something"
+          maxLength={200}
         />
-        <Button type="primary" onClick={addTodo}>
+        <Button type="primary" onClick={this.handleVaildation}>
           New
         </Button>
         <Button type="primary" onClick={deleteAllTodo}>
