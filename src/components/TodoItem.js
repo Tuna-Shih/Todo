@@ -9,11 +9,8 @@ class TodoItem extends React.Component {
     const { todoText, addTodo } = this.props;
 
     if (
-      todoText.split('').length >= 200 ||
-      todoText
-        .split('')
-        .map(e => stringWidth(e))
-        .includes(2)
+      todoText.length >= 200 ||
+      todoText.split('').some(e => stringWidth(e) == 2)
     )
       return alert('Illegal input');
     addTodo();
