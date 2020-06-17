@@ -12,9 +12,8 @@ class TodoItem extends React.Component {
       todoText.split('').length >= 200 ||
       todoText
         .split('')
-        .map(text => stringWidth(text))
-        .join('')
-        .match(2)
+        .map(e => stringWidth(e))
+        .includes(2)
     )
       return alert('Illegal input');
     addTodo();
