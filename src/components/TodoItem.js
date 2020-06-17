@@ -2,11 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles/TodoItem.less';
 import { Button, Input } from 'antd';
+import stringWidth from 'string-width';
 
 class TodoItem extends React.Component {
   handleVaildation = () => {
     const { todoText, addTodo } = this.props;
-    if (todoText.match(/[^x00-xff]/g) && !todoText.match(/[\uff65-\uff9f]/g))
+
+    if (
+      todoText.split('').length >= 200 ||
+      todoText
+        .split('')
+        .map(text => stringWidth(text))
+        .join('')
+        .match(2)
+    )
       return alert('Illegal input');
     addTodo();
   };
@@ -20,7 +29,6 @@ class TodoItem extends React.Component {
           value={todoText}
           onChange={handleChange}
           placeholder="Add Something"
-          maxLength={200}
         />
         <Button type="primary" onClick={this.handleVaildation}>
           New
