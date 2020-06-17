@@ -6,11 +6,8 @@ import { Button, Input } from 'antd';
 class TodoItem extends React.Component {
   handleVaildation = () => {
     const { todoText, addTodo } = this.props;
-    if (
-      todoText.match(/[\uff00-\uffff]/g) ||
-      todoText.match(/[\u4e00-\u9fa5]/g)
-    )
-      return;
+    if (todoText.match(/[^x00-xff]/g) && !todoText.match(/[\uff65-\uff9f]/g))
+      return alert('Illegal input');
     addTodo();
   };
 
