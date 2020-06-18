@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import styles from './styles/App.less';
 import TodoItem from './TodoItem';
 import Todo from './Todo';
+import FormList from './FormList';
 import cookies from 'js-cookie';
 
 import { List } from 'antd';
@@ -125,7 +126,11 @@ class App extends React.Component {
             header={
               <div style={{ textAlign: 'center' }}>{todos.length} Todo!</div>
             }
-            footer={<div style={{ textAlign: 'center' }}>Footer</div>}
+            footer={
+              <div style={{ textAlign: 'center' }}>
+                <FormList />
+              </div>
+            }
             bordered
             dataSource={todos}
             renderItem={todo => (

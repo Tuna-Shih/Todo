@@ -19,6 +19,7 @@
     "babel-plugin-module-resolver": "^4.0.0",
     "eslint": "^7.2.0",
     "fbjs": "^1.0.0",
+    "heroku": "^7.42.1",
     "js-cookie": "^2.2.1",
     "less": "^3.11.3",
     "next": "^9.4.4",
