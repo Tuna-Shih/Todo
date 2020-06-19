@@ -1,7 +1,6 @@
 import React from 'react';
 import styles from './styles/FormList.less';
 import { Form, Input, Button } from 'antd';
-import { SmileOutlined } from '@ant-design/icons';
 import cookies from 'js-cookie';
 
 const FormList = () => {
@@ -12,7 +11,7 @@ const FormList = () => {
     const oldData = getData ? JSON.parse(getData) : [];
 
     const dataList = [inputData, ...oldData];
-    console.log(dataList);
+
     cookies.set('userData', JSON.stringify(dataList));
   };
 
