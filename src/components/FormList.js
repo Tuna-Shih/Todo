@@ -2,16 +2,17 @@ import React from 'react';
 import styles from './styles/FormList.less';
 import { Form, Input, Button } from 'antd';
 import cookies from 'js-cookie';
+import validator from 'validator';
 
 const FormList = () => {
   const [form] = Form.useForm();
-
+  ('zh-TW');
   const onFinish = inputData => {
     const getData = cookies.get('userData');
     const oldData = getData ? JSON.parse(getData) : [];
 
     const dataList = [inputData, ...oldData];
-
+    console.log(dataList);
     cookies.set('userData', JSON.stringify(dataList));
   };
 
@@ -33,10 +34,16 @@ const FormList = () => {
           name="email"
           rules={[
             {
-              required: true,
-              message: 'must be form as email',
-              type: 'email'
-            }
+              required: true
+            },
+            () => ({
+              validator(rule, value) {
+                if (validator.isEmail(value)) {
+                  return Promise.resolve();
+                }
+                return Promise.reject('must be form as email');
+              }
+            })
           ]}>
           <Input placeholder="email" size="large" />
         </Form.Item>
@@ -45,10 +52,16 @@ const FormList = () => {
           name="phone"
           rules={[
             {
-              required: true,
-              message: 'must be form as phone',
-              pattern: /^0\d{9}$/
-            }
+              required: true
+            },
+            () => ({
+              validator(rule, value) {
+                if (validator.isMobilePhone(value, 'zh-TW')) {
+                  return Promise.resolve();
+                }
+                return Promise.reject('must be form as phone');
+              }
+            })
           ]}>
           <Input placeholder="phone" size="large" />
         </Form.Item>
