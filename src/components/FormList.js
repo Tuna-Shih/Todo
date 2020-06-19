@@ -1,23 +1,16 @@
 import React from 'react';
 import styles from './styles/FormList.less';
 import { Form, Input, Button } from 'antd';
+import { SmileOutlined } from '@ant-design/icons';
 import cookies from 'js-cookie';
 
 const FormList = () => {
   const [form] = Form.useForm();
 
-  const loadUserData = () => {
-    const getData = cookies.get('userData');
-    if (!getData) return [];
-    return JSON.parse(getData);
-  };
-
   const onFinish = inputData => {
-    const emailRule = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
-    const validate =
-      inputData.email.match(emailRule) && inputData.phone.match(/^0\d{9}$/);
-    if (!validate) return alert('Illegal input');
-    const oldData = loadUserData();
+    const getData = cookies.get('userData');
+    const oldData = getData ? JSON.parse(getData) : [];
+
     const dataList = [inputData, ...oldData];
     console.log(dataList);
     cookies.set('userData', JSON.stringify(dataList));
@@ -42,7 +35,8 @@ const FormList = () => {
           rules={[
             {
               required: true,
-              message: 'required'
+              message: 'must be form as email',
+              type: 'email'
             }
           ]}>
           <Input placeholder="email" size="large" />
@@ -53,7 +47,8 @@ const FormList = () => {
           rules={[
             {
               required: true,
-              message: 'required'
+              message: 'must be form as phone',
+              pattern: /^0\d{9}$/
             }
           ]}>
           <Input placeholder="phone" size="large" />
