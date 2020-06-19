@@ -1,18 +1,23 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './styles/FormList.less';
 import { Form, Input, Button } from 'antd';
 import cookies from 'js-cookie';
-import validator from 'validator';
+import isEmail from 'validator/lib/isEmail';
+import isMobilePhone from 'validator/lib/isMobilePhone';
 
 const FormList = () => {
   const [form] = Form.useForm();
-  ('zh-TW');
+  const [, forceUpdate] = useState();
+
+  useEffect(() => {
+    forceUpdate({});
+  }, []);
+
   const onFinish = inputData => {
     const getData = cookies.get('userData');
     const oldData = getData ? JSON.parse(getData) : [];
 
     const dataList = [inputData, ...oldData];
-    console.log(dataList);
     cookies.set('userData', JSON.stringify(dataList));
   };
 
@@ -38,7 +43,7 @@ const FormList = () => {
             },
             () => ({
               validator(rule, value) {
-                if (validator.isEmail(value)) {
+                if (isEmail(value)) {
                   return Promise.resolve();
                 }
                 return Promise.reject('must be form as email');
@@ -56,7 +61,7 @@ const FormList = () => {
             },
             () => ({
               validator(rule, value) {
-                if (validator.isMobilePhone(value, 'zh-TW')) {
+                if (isMobilePhone(value, 'zh-TW')) {
                   return Promise.resolve();
                 }
                 return Promise.reject('must be form as phone');
@@ -77,10 +82,19 @@ const FormList = () => {
           <Input placeholder="address" size="large" />
         </Form.Item>
 
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
+        <Form.Item shouldUpdate>
+          {() => (
+            <Button
+              type="primary"
+              htmlType="submit"
+              disabled={
+                !form.isFieldsTouched(true) ||
+                form.getFieldsError().filter(({ errors }) => errors.length)
+                  .length
+              }>
+              Submit
+            </Button>
+          )}
         </Form.Item>
       </Form>
     </div>
