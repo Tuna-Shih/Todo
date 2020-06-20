@@ -7,11 +7,6 @@ import isMobilePhone from 'validator/lib/isMobilePhone';
 
 const FormList = () => {
   const [form] = Form.useForm();
-  const [, forceUpdate] = useState();
-
-  useEffect(() => {
-    forceUpdate({});
-  }, []);
 
   const onFinish = inputData => {
     const getData = cookies.get('userData');
@@ -88,7 +83,6 @@ const FormList = () => {
               type="primary"
               htmlType="submit"
               disabled={
-                !form.isFieldsTouched(true) ||
                 form.getFieldsError().filter(({ errors }) => errors.length)
                   .length
               }>
