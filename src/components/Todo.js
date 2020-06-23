@@ -1,99 +1,82 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles/Todo.less';
 import { Button, Input, Tooltip } from 'antd';
 
-class Todo extends React.Component {
-  state = {
-    isEdit: false,
-    editText: this.props.todo.text,
-    overflow: false
+const Todo = props => {
+  const { todo, editTodo, deleteTodo } = props;
+  const [isEdit, setIsEdit] = useState(false);
+  const [editText, setEditText] = useState(props.todo.text);
+  const [overflow, setOverflow] = useState(false);
+
+  const myRef = useRef(null);
+
+  useEffect(() => {
+    checkOverflow();
+  });
+
+  const checkOverflow = () => {
+    const isOverflow = getComputedStyle(myRef.current).width;
+
+    if (isOverflow == '250px') return setOverflow(true);
+
+    return setOverflow(false);
   };
 
-  myRef = React.createRef();
-
-  componentDidMount() {
-    this.checkOverflow();
-  }
-
-  checkOverflow = () => {
-    const isOverflow = getComputedStyle(this.myRef.current).width;
-
-    if (isOverflow == '250px') return this.setState({ overflow: true });
-
-    this.setState({
-      overflow: false
-    });
-  };
-
-  delete = () => {
-    const { todo, deleteTodo } = this.props;
+  const del = () => {
     deleteTodo(todo.id);
   };
 
-  toggle = () => {
-    this.setState({
-      isEdit: !this.state.isEdit
-    });
+  const toggle = () => {
+    setIsEdit(!isEdit);
   };
 
-  handleChange = e => {
-    this.setState({
-      editText: e.target.value
-    });
+  const handleChange = e => {
+    setEditText(e.target.value);
   };
 
-  submit = () => {
-    const { todo, editTodo } = this.props;
-    const { editText } = this.state;
+  const submit = () => {
     const edit = { id: todo.id, text: editText };
     editTodo(todo.id, edit);
-    this.setState({
-      isEdit: !this.state.isEdit
-    });
-    this.checkOverflow();
+    setIsEdit(!isEdit);
+    checkOverflow();
   };
 
-  render() {
-    const { todo } = this.props;
-    const { isEdit, editText, overflow } = this.state;
-
-    return (
-      <div className={styles.item}>
-        <div className={styles.item_content} ref={this.myRef}>
-          {overflow ? (
-            <Tooltip title={todo.text} mouseEnterDelay={0.5}>
-              <span>{todo.text}</span>
-            </Tooltip>
-          ) : (
+  return (
+    <div className={styles.item}>
+      <div className={styles.item_content} ref={myRef}>
+        {overflow ? (
+          <Tooltip title={todo.text} mouseEnterDelay={0.5}>
             <span>{todo.text}</span>
-          )}
-        </div>
+          </Tooltip>
+        ) : (
+          <span>{todo.text}</span>
+        )}
+      </div>
 
-        <div className={isEdit ? styles.none : styles.item_state}>
-          <Button type="primary" onClick={this.delete}>
-            Delete
+      <div className={isEdit ? styles.none : styles.item_state}>
+        <Button type="primary" onClick={del}>
+          Delete
+        </Button>
+        <Button type="primary" onClick={toggle}>
+          {isEdit ? 'Editing' : 'Edit'}
+        </Button>
+      </div>
+
+      {isEdit ? (
+        <div className={styles.edit_input}>
+          <Input type="text" value={editText} onChange={handleChange} />
+          <Button type="primary" onClick={submit}>
+            Submit
           </Button>
-          <Button type="primary" onClick={this.toggle}>
+          <Button type="primary" onClick={toggle}>
             {isEdit ? 'Editing' : 'Edit'}
           </Button>
         </div>
-
-        {isEdit ? (
-          <div className={styles.edit_input}>
-            <Input type="text" value={editText} onChange={this.handleChange} />
-            <Button type="primary" onClick={this.submit}>
-              Submit
-            </Button>
-            <Button type="primary" onClick={this.toggle}>
-              {isEdit ? 'Editing' : 'Edit'}
-            </Button>
-          </div>
-        ) : null}
-      </div>
-    );
-  }
-}
+      ) : null}
+    </div>
+  );
+};
 
 Todo.propTypes = {
   todo: PropTypes.shape({

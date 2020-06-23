@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styles from './styles/FormList.less';
 import { Form, Input, Button } from 'antd';
 import cookies from 'js-cookie';
