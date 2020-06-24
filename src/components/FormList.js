@@ -1,7 +1,5 @@
-/* eslint-disable linebreak-style */
 import React from 'react';
 import styles from './styles/FormList.less';
-// eslint-disable-next-line no-unused-vars
 import { Form, Input, Button } from 'antd';
 import isEmail from 'validator/lib/isEmail';
 import isMobilePhone from 'validator/lib/isMobilePhone';

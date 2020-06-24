@@ -1,5 +1,3 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles/Todo.less';

@@ -1,8 +1,6 @@
-/* eslint-disable linebreak-style */
 import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles/TodoItem.less';
-// eslint-disable-next-line no-unused-vars
 import { Input, Button } from 'antd';
 import handleValidation from './hooks/useHandleValidation';
 

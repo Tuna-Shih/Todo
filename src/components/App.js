@@ -1,13 +1,8 @@
-/* eslint-disable linebreak-style */
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './styles/App.less';
-// eslint-disable-next-line no-unused-vars
 import TodoItem from './TodoItem';
-// eslint-disable-next-line no-unused-vars
 import Todo from './Todo';
-// eslint-disable-next-line no-unused-vars
 import FormList from './FormList';
-// eslint-disable-next-line no-unused-vars
 import { List } from 'antd';
 import {
   loadMore,
