@@ -7,11 +7,10 @@ import { List } from 'antd';
 import {
   loadMore,
   autoLoad,
-  addTodo,
-  deleteAllTodo,
+  useAddTodo,
+  useDeleteAllTodo,
   deleteTodo,
-  editTodo,
-  handleChange
+  editTodo
 } from './hooks/useApp';
 
 const App = () => {
@@ -22,6 +21,9 @@ const App = () => {
 
   const myRef = useRef(null);
 
+  const addTodo = useAddTodo(todoText, todos, setTodos, setTodoText);
+  const deleteAllTodo = useDeleteAllTodo(setTodos);
+
   const handleScroll = () => {
     if (window.innerHeight + window.scrollY >= document.body.scrollHeight) {
       loadMore(endCursor, todos, setEndCursor, setTodos);
@@ -30,7 +32,7 @@ const App = () => {
 
   useEffect(() => {
     autoLoad(endCursor, todos, setEndCursor, setTodos, myRef, setStop);
-  }, [stop, endCursor, todos]);
+  }, [stop]);
 
   useEffect(() => {
     document.addEventListener('scroll', handleScroll);
@@ -42,15 +44,11 @@ const App = () => {
       <div className={styles.add}>
         <TodoItem
           todoText={todoText}
-          addTodo={() => {
-            addTodo(todoText, todos, setTodos, setTodoText);
-          }}
+          addTodo={addTodo}
           handleChange={e => {
-            handleChange(e, setTodoText);
+            setTodoText(e.target.value);
           }}
-          deleteAllTodo={() => {
-            deleteAllTodo(setTodos);
-          }}
+          deleteAllTodo={deleteAllTodo}
         />
       </div>
       <div>

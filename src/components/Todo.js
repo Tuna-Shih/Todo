@@ -2,7 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles/Todo.less';
 import { Tooltip, Button, Input } from 'antd';
-import { useDel, useToggle, checkOverflow, submit } from './hooks/useTodo';
+import {
+  useDel,
+  useToggle,
+  useCheckOverflow,
+  useSubmit
+} from './hooks/useTodo';
 
 const Todo = ({ todo, editTodo, deleteTodo }) => {
   const [isEdit, setIsEdit] = useState(false);
@@ -13,10 +18,10 @@ const Todo = ({ todo, editTodo, deleteTodo }) => {
 
   const del = useDel(todo.id, deleteTodo);
   const toggle = useToggle(isEdit, setIsEdit);
+  const submit = useSubmit(todo.id, editText, editTodo, isEdit, setIsEdit);
+  const checkOverflow = useCheckOverflow(myRef, setOverflow);
 
-  useEffect(() => {
-    checkOverflow(myRef, setOverflow);
-  }, []);
+  useEffect(checkOverflow);
 
   return (
     <div className={styles.item}>
@@ -48,20 +53,7 @@ const Todo = ({ todo, editTodo, deleteTodo }) => {
               setEditText(e.target.value);
             }}
           />
-          <Button
-            type="primary"
-            onClick={() => {
-              submit(
-                todo.id,
-                editText,
-                editTodo,
-                isEdit,
-                setIsEdit,
-                myRef,
-                setOverflow,
-                checkOverflow
-              );
-            }}>
+          <Button type="primary" onClick={submit}>
             Submit
           </Button>
           <Button type="primary" onClick={toggle}>

@@ -1,11 +1,13 @@
 import { useCallback } from 'react';
 
-export function checkOverflow(myRef, setOverflow) {
-  const isOverflow = getComputedStyle(myRef.current).width;
+export function useCheckOverflow(myRef, setOverflow) {
+  return useCallback(() => {
+    const isOverflow = getComputedStyle(myRef.current).width;
 
-  if (isOverflow == '250px') return setOverflow(true);
+    if (isOverflow == '250px') return setOverflow(true);
 
-  return setOverflow(false);
+    return setOverflow(false);
+  }, [myRef, setOverflow]);
 }
 
 export function useDel(todoId, deleteTodo) {
@@ -20,18 +22,10 @@ export function useToggle(isEdit, setIsEdit) {
   }, [isEdit, setIsEdit]);
 }
 
-export function submit(
-  todoID,
-  editText,
-  editTodo,
-  isEdit,
-  setIsEdit,
-  myRef,
-  setOverflow,
-  checkOverflow
-) {
-  const edit = { id: todoID, text: editText };
-  editTodo(todoID, edit);
-  setIsEdit(!isEdit);
-  checkOverflow(myRef, setOverflow);
+export function useSubmit(todoID, editText, editTodo, isEdit, setIsEdit) {
+  return useCallback(() => {
+    const edit = { id: todoID, text: editText };
+    editTodo(todoID, edit);
+    setIsEdit(!isEdit);
+  }, [todoID, editText, editTodo, isEdit, setIsEdit]);
 }
