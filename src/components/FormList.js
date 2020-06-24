@@ -1,24 +1,18 @@
+/* eslint-disable linebreak-style */
 import React from 'react';
 import styles from './styles/FormList.less';
+// eslint-disable-next-line no-unused-vars
 import { Form, Input, Button } from 'antd';
-import cookies from 'js-cookie';
 import isEmail from 'validator/lib/isEmail';
 import isMobilePhone from 'validator/lib/isMobilePhone';
+import useOnFinish from './hooks/useOnFinish';
 
 const FormList = () => {
   const [form] = Form.useForm();
 
-  const onFinish = inputData => {
-    const getData = cookies.get('userData');
-    const oldData = getData ? JSON.parse(getData) : [];
-
-    const dataList = [inputData, ...oldData];
-    cookies.set('userData', JSON.stringify(dataList));
-  };
-
   return (
     <div className={styles.wrapper}>
-      <Form form={form} onFinish={onFinish}>
+      <Form form={form} onFinish={useOnFinish}>
         <Form.Item
           rules={[
             {
@@ -95,4 +89,4 @@ const FormList = () => {
   );
 };
 
-export default FormList;
+export default React.memo(FormList);

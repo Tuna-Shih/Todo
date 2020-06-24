@@ -1,20 +1,12 @@
+/* eslint-disable linebreak-style */
 import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles/TodoItem.less';
-import { Button, Input } from 'antd';
-import stringWidth from 'string-width';
+// eslint-disable-next-line no-unused-vars
+import { Input, Button } from 'antd';
+import handleValidation from './hooks/useHandleValidation';
 
-const TodoItem = props => {
-  const { todoText, deleteAllTodo, handleChange, addTodo } = props;
-  const handleVaildation = () => {
-    if (
-      todoText.length >= 200 ||
-      todoText.split('').some(e => stringWidth(e) == 2)
-    )
-      return alert('Illegal input');
-    addTodo();
-  };
-
+const TodoItem = ({ todoText, deleteAllTodo, handleChange, addTodo }) => {
   return (
     <div className={styles.add_item}>
       <Input
@@ -23,7 +15,11 @@ const TodoItem = props => {
         onChange={handleChange}
         placeholder="Add Something"
       />
-      <Button type="primary" onClick={handleVaildation}>
+      <Button
+        type="primary"
+        onClick={() => {
+          handleValidation(todoText, addTodo);
+        }}>
         New
       </Button>
       <Button type="primary" onClick={deleteAllTodo}>
@@ -40,4 +36,4 @@ TodoItem.propTypes = {
   deleteAllTodo: PropTypes.func.isRequired
 };
 
-export default TodoItem;
+export default React.memo(TodoItem);

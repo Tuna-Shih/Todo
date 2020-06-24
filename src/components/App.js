@@ -1,11 +1,23 @@
+/* eslint-disable linebreak-style */
 import React, { useState, useEffect, useRef } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import styles from './styles/App.less';
+// eslint-disable-next-line no-unused-vars
 import TodoItem from './TodoItem';
+// eslint-disable-next-line no-unused-vars
 import Todo from './Todo';
+// eslint-disable-next-line no-unused-vars
 import FormList from './FormList';
-import cookies from 'js-cookie';
+// eslint-disable-next-line no-unused-vars
 import { List } from 'antd';
+import {
+  loadMore,
+  autoLoad,
+  addTodo,
+  deleteAllTodo,
+  deleteTodo,
+  editTodo,
+  handleChange
+} from './hooks/useApp';
 
 const App = () => {
   const [todos, setTodos] = useState([]);
@@ -15,110 +27,42 @@ const App = () => {
 
   const myRef = useRef(null);
 
-  const loadData = (first, after) => {
-    const getData = cookies.get('todoapp');
-
-    if (!getData) return [];
-
-    const todoData = JSON.parse(getData);
-
-    const startIndex = !after
-      ? -1
-      : todoData.findIndex(todo => todo.id === after);
-
-    return todoData.slice(startIndex + 1, startIndex + first + 1);
-  };
-
-  const loadMore = () => {
-    const gotData = loadData(10, endCursor);
-
-    if (gotData.length === 0) return;
-
-    const lastID = gotData.length - 1;
-    const newTodos = [...todos, ...gotData];
-    setEndCursor(gotData[lastID].id);
-
-    setTodos(newTodos);
-  };
-
-  const autoLoad = () => {
-    const toStop =
-      window.innerHeight > myRef.current.clientHeight
-        ? window.innerHeight - myRef.current.clientHeight
-        : 0;
-
-    setStop(toStop);
-
-    if (window.innerHeight < myRef.current.clientHeight) return;
-    loadMore();
-  };
-
   const handleScroll = () => {
     if (window.innerHeight + window.scrollY >= document.body.scrollHeight) {
-      loadMore();
+      loadMore(endCursor, todos, setEndCursor, setTodos);
     }
   };
 
   useEffect(() => {
-    autoLoad();
-  }, [stop]);
+    autoLoad(endCursor, todos, setEndCursor, setTodos, myRef, setStop);
+  }, [stop, endCursor, todos]);
 
   useEffect(() => {
     document.addEventListener('scroll', handleScroll);
     return () => document.removeEventListener('scroll', handleScroll);
   });
 
-  const addTodo = () => {
-    if (todoText.replace(/\s*/g, '') !== '') {
-      const todo = { id: uuidv4(), text: todoText };
-      const newTodos = [todo, ...todos];
-      setTodos(newTodos);
-      setTodoText('');
-      cookies.set('todoapp', JSON.stringify(newTodos));
-    }
-  };
-
-  const deleteAllTodo = () => {
-    const newTodos = [];
-    setTodos(newTodos);
-    cookies.set('todoapp', JSON.stringify(newTodos));
-  };
-
-  const deleteTodo = id => {
-    const newTodos = todos.filter(todo => todo.id !== id);
-    setTodos(newTodos);
-    cookies.set('todoapp', JSON.stringify(newTodos));
-  };
-
-  const editTodo = (id, edit) => {
-    const newTodos = todos.map(todo =>
-      todo.id === id && edit.text.replace(/\s*/g, '') !== '' ? edit : todo
-    );
-    setTodos(newTodos);
-    cookies.set('todoapp', JSON.stringify(newTodos));
-  };
-
-  const handleChange = e => {
-    setTodoText(e.target.value);
-  };
-
   return (
     <div className={styles.wrapper} ref={myRef}>
       <div className={styles.add}>
         <TodoItem
           todoText={todoText}
-          addTodo={addTodo}
-          handleChange={handleChange}
-          deleteAllTodo={deleteAllTodo}
+          addTodo={() => {
+            addTodo(todoText, todos, setTodos, setTodoText);
+          }}
+          handleChange={e => {
+            handleChange(e, setTodoText);
+          }}
+          deleteAllTodo={() => {
+            deleteAllTodo(setTodos);
+          }}
         />
       </div>
       <div>
         <List
           size="small"
           header={
-            <div style={{ textAlign: 'center' }}>
-              <button onClick={loadMore}>{todos.length} Todo!</button>
-            </div>
+            <div style={{ textAlign: 'center' }}>{todos.length} Todo!</div>
           }
           footer={
             <div style={{ textAlign: 'center' }}>
@@ -132,8 +76,12 @@ const App = () => {
               <Todo
                 key={todo.id}
                 todo={todo}
-                deleteTodo={deleteTodo}
-                editTodo={editTodo}
+                deleteTodo={id => {
+                  deleteTodo(id, todos, setTodos);
+                }}
+                editTodo={(id, edit) => {
+                  editTodo(id, edit, todos, setTodos);
+                }}
               />
             </List.Item>
           )}
@@ -142,4 +90,4 @@ const App = () => {
     </div>
   );
 };
-export default App;
+export default React.memo(App);

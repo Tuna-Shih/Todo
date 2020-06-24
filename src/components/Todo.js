@@ -1,46 +1,27 @@
+/* eslint-disable linebreak-style */
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles/Todo.less';
-import { Button, Input, Tooltip } from 'antd';
+import { Tooltip, Button, Input } from 'antd';
+import {
+  del,
+  toggle,
+  checkOverflow,
+  handleChange,
+  submit
+} from './hooks/useTodo';
 
-const Todo = props => {
-  const { todo, editTodo, deleteTodo } = props;
+const Todo = ({ todo, editTodo, deleteTodo }) => {
   const [isEdit, setIsEdit] = useState(false);
-  const [editText, setEditText] = useState(props.todo.text);
+  const [editText, setEditText] = useState(todo.text);
   const [overflow, setOverflow] = useState(false);
 
   const myRef = useRef(null);
 
   useEffect(() => {
-    checkOverflow();
-  });
-
-  const checkOverflow = () => {
-    const isOverflow = getComputedStyle(myRef.current).width;
-
-    if (isOverflow == '250px') return setOverflow(true);
-
-    return setOverflow(false);
-  };
-
-  const del = () => {
-    deleteTodo(todo.id);
-  };
-
-  const toggle = () => {
-    setIsEdit(!isEdit);
-  };
-
-  const handleChange = e => {
-    setEditText(e.target.value);
-  };
-
-  const submit = () => {
-    const edit = { id: todo.id, text: editText };
-    editTodo(todo.id, edit);
-    setIsEdit(!isEdit);
-    checkOverflow();
-  };
+    checkOverflow(myRef, setOverflow);
+  }, []);
 
   return (
     <div className={styles.item}>
@@ -55,21 +36,52 @@ const Todo = props => {
       </div>
 
       <div className={isEdit ? styles.none : styles.item_state}>
-        <Button type="primary" onClick={del}>
+        <Button
+          type="primary"
+          onClick={() => {
+            del(todo.id, deleteTodo);
+          }}>
           Delete
         </Button>
-        <Button type="primary" onClick={toggle}>
+        <Button
+          type="primary"
+          onClick={() => {
+            toggle(isEdit, setIsEdit);
+          }}>
           {isEdit ? 'Editing' : 'Edit'}
         </Button>
       </div>
 
       {isEdit ? (
         <div className={styles.edit_input}>
-          <Input type="text" value={editText} onChange={handleChange} />
-          <Button type="primary" onClick={submit}>
+          <Input
+            type="text"
+            value={editText}
+            onChange={e => {
+              handleChange(e, setEditText);
+            }}
+          />
+          <Button
+            type="primary"
+            onClick={() => {
+              submit(
+                todo.id,
+                editText,
+                editTodo,
+                isEdit,
+                setIsEdit,
+                myRef,
+                setOverflow,
+                checkOverflow
+              );
+            }}>
             Submit
           </Button>
-          <Button type="primary" onClick={toggle}>
+          <Button
+            type="primary"
+            onClick={() => {
+              toggle(isEdit, setIsEdit);
+            }}>
             {isEdit ? 'Editing' : 'Edit'}
           </Button>
         </div>
@@ -87,4 +99,4 @@ Todo.propTypes = {
   editTodo: PropTypes.func.isRequired
 };
 
-export default Todo;
+export default React.memo(Todo);
