@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles/TodoItem.less';
 import { Input, Button } from 'antd';
-import handleValidation from './hooks/useHandleValidation';
+import useHandleValidation from './hooks/useHandleValidation';
 
 const TodoItem = ({ todoText, deleteAllTodo, handleChange, addTodo }) => {
-  const handleValidationF = handleValidation(todoText, addTodo);
+  const handleValidation = useHandleValidation(todoText, addTodo);
 
   return (
     <div className={styles.add_item}>
@@ -15,7 +15,7 @@ const TodoItem = ({ todoText, deleteAllTodo, handleChange, addTodo }) => {
         onChange={handleChange}
         placeholder="Add Something"
       />
-      <Button type="primary" onClick={handleValidationF}>
+      <Button type="primary" onClick={handleValidation}>
         New
       </Button>
       <Button type="primary" onClick={deleteAllTodo}>

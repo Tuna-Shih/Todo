@@ -1,3 +1,5 @@
+import { useCallback } from 'react';
+
 export function checkOverflow(myRef, setOverflow) {
   const isOverflow = getComputedStyle(myRef.current).width;
 
@@ -6,16 +8,16 @@ export function checkOverflow(myRef, setOverflow) {
   return setOverflow(false);
 }
 
-export function del(todoId, deleteTodo) {
-  deleteTodo(todoId);
+export function useDel(todoId, deleteTodo) {
+  return useCallback(() => {
+    deleteTodo(todoId);
+  }, [todoId, deleteTodo]);
 }
 
-export function toggle(isEdit, setIsEdit) {
-  setIsEdit(!isEdit);
-}
-
-export function handleChange(e, setEditText) {
-  setEditText(e.target.value);
+export function useToggle(isEdit, setIsEdit) {
+  return useCallback(() => {
+    setIsEdit(!isEdit);
+  }, [isEdit, setIsEdit]);
 }
 
 export function submit(

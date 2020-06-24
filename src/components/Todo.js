@@ -2,13 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles/Todo.less';
 import { Tooltip, Button, Input } from 'antd';
-import {
-  del,
-  toggle,
-  checkOverflow,
-  handleChange,
-  submit
-} from './hooks/useTodo';
+import { useDel, useToggle, checkOverflow, submit } from './hooks/useTodo';
 
 const Todo = ({ todo, editTodo, deleteTodo }) => {
   const [isEdit, setIsEdit] = useState(false);
@@ -16,6 +10,9 @@ const Todo = ({ todo, editTodo, deleteTodo }) => {
   const [overflow, setOverflow] = useState(false);
 
   const myRef = useRef(null);
+
+  const del = useDel(todo.id, deleteTodo);
+  const toggle = useToggle(isEdit, setIsEdit);
 
   useEffect(() => {
     checkOverflow(myRef, setOverflow);
@@ -34,18 +31,10 @@ const Todo = ({ todo, editTodo, deleteTodo }) => {
       </div>
 
       <div className={isEdit ? styles.none : styles.item_state}>
-        <Button
-          type="primary"
-          onClick={() => {
-            del(todo.id, deleteTodo);
-          }}>
+        <Button type="primary" onClick={del}>
           Delete
         </Button>
-        <Button
-          type="primary"
-          onClick={() => {
-            toggle(isEdit, setIsEdit);
-          }}>
+        <Button type="primary" onClick={toggle}>
           {isEdit ? 'Editing' : 'Edit'}
         </Button>
       </div>
@@ -56,7 +45,7 @@ const Todo = ({ todo, editTodo, deleteTodo }) => {
             type="text"
             value={editText}
             onChange={e => {
-              handleChange(e, setEditText);
+              setEditText(e.target.value);
             }}
           />
           <Button
@@ -75,11 +64,7 @@ const Todo = ({ todo, editTodo, deleteTodo }) => {
             }}>
             Submit
           </Button>
-          <Button
-            type="primary"
-            onClick={() => {
-              toggle(isEdit, setIsEdit);
-            }}>
+          <Button type="primary" onClick={toggle}>
             {isEdit ? 'Editing' : 'Edit'}
           </Button>
         </div>
