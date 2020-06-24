@@ -5,6 +5,8 @@ import { Input, Button } from 'antd';
 import handleValidation from './hooks/useHandleValidation';
 
 const TodoItem = ({ todoText, deleteAllTodo, handleChange, addTodo }) => {
+  const handleValidationF = handleValidation(todoText, addTodo);
+
   return (
     <div className={styles.add_item}>
       <Input
@@ -13,11 +15,7 @@ const TodoItem = ({ todoText, deleteAllTodo, handleChange, addTodo }) => {
         onChange={handleChange}
         placeholder="Add Something"
       />
-      <Button
-        type="primary"
-        onClick={() => {
-          handleValidation(todoText, addTodo);
-        }}>
+      <Button type="primary" onClick={handleValidationF}>
         New
       </Button>
       <Button type="primary" onClick={deleteAllTodo}>

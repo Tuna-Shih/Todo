@@ -13,7 +13,7 @@ const loadData = (first, after) => {
 };
 
 export function loadMore(endCursor, todos, setEndCursor, setTodos) {
-  const gotData = loadData(10, endCursor);
+  const gotData = loadData(5, endCursor);
 
   if (gotData.length === 0) return;
 
@@ -38,7 +38,6 @@ export function autoLoad(
       : 0;
 
   setStop(toStop);
-
   if (window.innerHeight < myRef.current.clientHeight) return;
   loadMore(endCursor, todos, setEndCursor, setTodos);
 }

@@ -7,10 +7,11 @@ import useOnFinish from './hooks/useOnFinish';
 
 const FormList = () => {
   const [form] = Form.useForm();
+  const onFinish = useOnFinish();
 
   return (
     <div className={styles.wrapper}>
-      <Form form={form} onFinish={useOnFinish}>
+      <Form form={form} onFinish={onFinish}>
         <Form.Item
           rules={[
             {
