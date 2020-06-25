@@ -13,8 +13,8 @@ const loadData = (first, after) => {
   return todoData.slice(startIndex + 1, startIndex + first + 1);
 };
 
-export function loadMore(endCursor, todos, setEndCursor, setTodos) {
-  const gotData = loadData(5, endCursor);
+const loadMore = (endCursor, todos, setEndCursor, setTodos) => {
+  const gotData = loadData(10, endCursor);
 
   if (gotData.length === 0) return;
 
@@ -22,24 +22,33 @@ export function loadMore(endCursor, todos, setEndCursor, setTodos) {
   const newTodos = [...todos, ...gotData];
   setEndCursor(gotData[lastID].id);
   setTodos(newTodos);
+};
+
+export function useHandleScroll(endCursor, todos, setEndCursor, setTodos) {
+  return useCallback(() => {
+    if (window.innerHeight + window.scrollY < document.body.scrollHeight)
+      return;
+    loadMore(endCursor, todos, setEndCursor, setTodos);
+  }, [endCursor, todos, setEndCursor, setTodos]);
 }
 
-export function autoLoad(
+export function useAutoLoad(
   endCursor,
   todos,
   setEndCursor,
   setTodos,
-  myRef,
+  wrapperRef,
   setStop
 ) {
-  const toStop =
-    window.innerHeight > myRef.current.clientHeight
-      ? window.innerHeight - myRef.current.clientHeight
-      : 0;
-
-  setStop(toStop);
-  if (window.innerHeight < myRef.current.clientHeight) return;
-  loadMore(endCursor, todos, setEndCursor, setTodos);
+  return useCallback(() => {
+    const toStop =
+      window.innerHeight > wrapperRef.current.clientHeight
+        ? window.innerHeight - wrapperRef.current.clientHeight
+        : 0;
+    setStop(toStop);
+    if (window.innerHeight < wrapperRef.current.clientHeight) return;
+    loadMore(endCursor, todos, setEndCursor, setTodos);
+  }, [endCursor, todos, setEndCursor, setTodos, wrapperRef, setStop]);
 }
 
 export function useAddTodo(todoText, todos, setTodos, setTodoText) {
@@ -62,16 +71,26 @@ export function useDeleteAllTodo(setTodos) {
   }, [setTodos]);
 }
 
-export function deleteTodo(id, todos, setTodos) {
-  const newTodos = todos.filter(todo => todo.id !== id);
-  setTodos(newTodos);
-  cookies.set('todoapp', JSON.stringify(newTodos));
+export function useDeleteTodo(todos, setTodos) {
+  return useCallback(
+    id => {
+      const newTodos = todos.filter(todo => todo.id !== id);
+      setTodos(newTodos);
+      cookies.set('todoapp', JSON.stringify(newTodos));
+    },
+    [todos, setTodos]
+  );
 }
 
-export function editTodo(id, edit, todos, setTodos) {
-  const newTodos = todos.map(todo =>
-    todo.id === id && edit.text.replace(/\s*/g, '') !== '' ? edit : todo
+export function useEditTodo(todos, setTodos) {
+  return useCallback(
+    (id, edit) => {
+      const newTodos = todos.map(todo =>
+        todo.id === id && edit.text.replace(/\s*/g, '') !== '' ? edit : todo
+      );
+      setTodos(newTodos);
+      cookies.set('todoapp', JSON.stringify(newTodos));
+    },
+    [todos, setTodos]
   );
-  setTodos(newTodos);
-  cookies.set('todoapp', JSON.stringify(newTodos));
 }

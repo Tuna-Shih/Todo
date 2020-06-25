@@ -5,12 +5,12 @@ import Todo from './Todo';
 import FormList from './FormList';
 import { List } from 'antd';
 import {
-  loadMore,
-  autoLoad,
+  useAutoLoad,
   useAddTodo,
   useDeleteAllTodo,
-  deleteTodo,
-  editTodo
+  useDeleteTodo,
+  useEditTodo,
+  useHandleScroll
 } from './hooks/useApp';
 
 const App = () => {
@@ -19,20 +19,28 @@ const App = () => {
   const [endCursor, setEndCursor] = useState('');
   const [stop, setStop] = useState(0);
 
-  const myRef = useRef(null);
+  const wrapperRef = useRef(null);
 
+  const autoLoad = useAutoLoad(
+    endCursor,
+    todos,
+    setEndCursor,
+    setTodos,
+    wrapperRef,
+    setStop
+  );
   const addTodo = useAddTodo(todoText, todos, setTodos, setTodoText);
   const deleteAllTodo = useDeleteAllTodo(setTodos);
+  const deleteTodo = useDeleteTodo(todos, setTodos);
+  const editTodo = useEditTodo(todos, setTodos);
+  const handleScroll = useHandleScroll(
+    endCursor,
+    todos,
+    setEndCursor,
+    setTodos
+  );
 
-  const handleScroll = () => {
-    if (window.innerHeight + window.scrollY >= document.body.scrollHeight) {
-      loadMore(endCursor, todos, setEndCursor, setTodos);
-    }
-  };
-
-  useEffect(() => {
-    autoLoad(endCursor, todos, setEndCursor, setTodos, myRef, setStop);
-  }, [stop]);
+  useEffect(autoLoad, [stop]);
 
   useEffect(() => {
     document.addEventListener('scroll', handleScroll);
@@ -40,7 +48,7 @@ const App = () => {
   });
 
   return (
-    <div className={styles.wrapper} ref={myRef}>
+    <div className={styles.wrapper} ref={wrapperRef}>
       <div className={styles.add}>
         <TodoItem
           todoText={todoText}
@@ -69,12 +77,8 @@ const App = () => {
               <Todo
                 key={todo.id}
                 todo={todo}
-                deleteTodo={id => {
-                  deleteTodo(id, todos, setTodos);
-                }}
-                editTodo={(id, edit) => {
-                  editTodo(id, edit, todos, setTodos);
-                }}
+                deleteTodo={deleteTodo}
+                editTodo={editTodo}
               />
             </List.Item>
           )}
