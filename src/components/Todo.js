@@ -2,30 +2,29 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles/Todo.less';
 import { Tooltip, Button, Input } from 'antd';
-import {
-  useDel,
-  useToggle,
-  useCheckOverflow,
-  useSubmit
-} from './hooks/useTodo';
+import { useTodo } from './hooks/useTodo';
 
 const Todo = ({ todo, editTodo, deleteTodo }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [editText, setEditText] = useState(todo.text);
   const [overflow, setOverflow] = useState(false);
 
-  const myRef = useRef(null);
+  const checkOverflowRef = useRef(null);
 
-  const del = useDel(todo.id, deleteTodo);
-  const toggle = useToggle(isEdit, setIsEdit);
-  const submit = useSubmit(todo.id, editText, editTodo, isEdit, setIsEdit);
-  const checkOverflow = useCheckOverflow(myRef, setOverflow);
+  const del = useTodo('delete', todo.id, deleteTodo);
+  const toggle = useTodo('toggle', isEdit, setIsEdit);
+  const checkOverflow = useTodo('checkOverflow', checkOverflowRef, setOverflow);
+  const submit = useTodo(
+    'submit',
+    { todoID: todo.id, editText: editText, isEdit: isEdit },
+    { editTodo: editTodo, setIsEdit: setIsEdit }
+  );
 
   useEffect(checkOverflow);
 
   return (
     <div className={styles.item}>
-      <div className={styles.item_content} ref={myRef}>
+      <div className={styles.item_content} ref={checkOverflowRef}>
         {overflow ? (
           <Tooltip title={todo.text} mouseEnterDelay={0.5}>
             <span>{todo.text}</span>

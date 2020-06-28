@@ -1,31 +1,35 @@
 import { useCallback } from 'react';
 
-export function useCheckOverflow(myRef, setOverflow) {
-  return useCallback(() => {
-    const isOverflow = getComputedStyle(myRef.current).width;
+export function useTodo(doFunc, input, stateFunction) {
+  const del = useCallback(() => {
+    stateFunction(input);
+  }, [input, stateFunction]);
 
-    if (isOverflow == '250px') return setOverflow(true);
+  const toggle = useCallback(() => {
+    stateFunction(!input);
+  }, [input, stateFunction]);
 
-    return setOverflow(false);
-  }, [myRef, setOverflow]);
-}
+  const checkOverflow = useCallback(() => {
+    const isOverflow = getComputedStyle(input.current).width;
 
-export function useDel(todoId, deleteTodo) {
-  return useCallback(() => {
-    deleteTodo(todoId);
-  }, [todoId, deleteTodo]);
-}
+    if (isOverflow == '250px') return stateFunction(true);
 
-export function useToggle(isEdit, setIsEdit) {
-  return useCallback(() => {
-    setIsEdit(!isEdit);
-  }, [isEdit, setIsEdit]);
-}
+    return stateFunction(false);
+  }, [input, stateFunction]);
 
-export function useSubmit(todoID, editText, editTodo, isEdit, setIsEdit) {
-  return useCallback(() => {
-    const edit = { id: todoID, text: editText };
-    editTodo(todoID, edit);
-    setIsEdit(!isEdit);
-  }, [todoID, editText, editTodo, isEdit, setIsEdit]);
+  const submit = useCallback(() => {
+    const edit = { id: input.todoID, text: input.editText };
+    stateFunction.editTodo(input.todoID, edit);
+    stateFunction.setIsEdit(!input.isEdit);
+  }, [input, stateFunction]);
+
+  if (doFunc == 'delete') {
+    return del;
+  } else if (doFunc == 'toggle') {
+    return toggle;
+  } else if (doFunc == 'checkOverflow') {
+    return checkOverflow;
+  } else if (doFunc == 'submit') {
+    return submit;
+  }
 }
