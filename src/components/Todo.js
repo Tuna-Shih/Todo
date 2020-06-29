@@ -2,20 +2,18 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles/Todo.less';
 import { Tooltip, Button, Input } from 'antd';
-import { useTodo } from './hooks/useTodo';
+import useSubmitEdit from './hooks/useSubmitEdit';
+import useCheckOverFlow from './hooks/useCheckOverFlow';
 
 const Todo = ({ todo, editTodo, deleteTodo }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [editText, setEditText] = useState(todo.text);
-  const [overflow, setOverflow] = useState(false);
+  const [overflow, setOverflow] = useState();
 
   const checkOverflowRef = useRef(null);
 
-  const del = useTodo('delete', todo.id, deleteTodo);
-  const toggle = useTodo('toggle', isEdit, setIsEdit);
-  const checkOverflow = useTodo('checkOverflow', checkOverflowRef, setOverflow);
-  const submit = useTodo(
-    'submit',
+  const checkOverflow = useCheckOverFlow(checkOverflowRef, setOverflow);
+  const submit = useSubmitEdit(
     { todoID: todo.id, editText: editText, isEdit: isEdit },
     { editTodo: editTodo, setIsEdit: setIsEdit }
   );
@@ -35,10 +33,18 @@ const Todo = ({ todo, editTodo, deleteTodo }) => {
       </div>
 
       <div className={isEdit ? styles.none : styles.item_state}>
-        <Button type="primary" onClick={del}>
+        <Button
+          type="primary"
+          onClick={() => {
+            deleteTodo(todo.id);
+          }}>
           Delete
         </Button>
-        <Button type="primary" onClick={toggle}>
+        <Button
+          type="primary"
+          onClick={() => {
+            setIsEdit(!isEdit);
+          }}>
           {isEdit ? 'Editing' : 'Edit'}
         </Button>
       </div>
@@ -55,7 +61,11 @@ const Todo = ({ todo, editTodo, deleteTodo }) => {
           <Button type="primary" onClick={submit}>
             Submit
           </Button>
-          <Button type="primary" onClick={toggle}>
+          <Button
+            type="primary"
+            onClick={() => {
+              setIsEdit(!isEdit);
+            }}>
             {isEdit ? 'Editing' : 'Edit'}
           </Button>
         </div>
