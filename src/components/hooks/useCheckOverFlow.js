@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
 
-export default (input, stateFunction) => {
+export default (input, inputFunction) => {
   return useCallback(() => {
     const isOverflow = getComputedStyle(input.current).width;
 
-    if (isOverflow == '250px') return stateFunction(true);
+    if (isOverflow == '250px') return inputFunction(true);
 
-    return stateFunction(false);
-  }, [input, stateFunction]);
+    return inputFunction(false);
+  }, [input, inputFunction]);
 };

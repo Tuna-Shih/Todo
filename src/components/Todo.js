@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles/Todo.less';
 import { Tooltip, Button, Input } from 'antd';
-import useSubmitEdit from './hooks/useSubmitEdit';
 import useCheckOverFlow from './hooks/useCheckOverFlow';
 
 const Todo = ({ todo, editTodo, deleteTodo }) => {
@@ -13,10 +12,6 @@ const Todo = ({ todo, editTodo, deleteTodo }) => {
   const checkOverflowRef = useRef(null);
 
   const checkOverflow = useCheckOverFlow(checkOverflowRef, setOverflow);
-  const submit = useSubmitEdit(
-    { todoID: todo.id, editText: editText, isEdit: isEdit },
-    { editTodo: editTodo, setIsEdit: setIsEdit }
-  );
 
   useEffect(checkOverflow);
 
@@ -58,7 +53,12 @@ const Todo = ({ todo, editTodo, deleteTodo }) => {
               setEditText(e.target.value);
             }}
           />
-          <Button type="primary" onClick={submit}>
+          <Button
+            type="primary"
+            onClick={() => {
+              editTodo(todo.id, { id: todo.id, text: editText });
+              setIsEdit(!isEdit);
+            }}>
             Submit
           </Button>
           <Button

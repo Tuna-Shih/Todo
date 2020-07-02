@@ -4,40 +4,28 @@ import TodoItem from './TodoItem';
 import Todo from './Todo';
 import FormList from './FormList';
 import { List } from 'antd';
-import {
-  useAutoLoad,
-  useAddTodo,
-  useDeleteAllTodo,
-  useDeleteTodo,
-  useEditTodo,
-  useHandleScroll
-} from './hooks/useApp';
+import cookies from 'js-cookie';
+import useAddTodo from './hooks/useAddTodo';
+import useAutoLoad from './hooks/useAutoLoad';
+import useHandleScroll from './hooks/useHandleScroll';
 
 const App = () => {
   const [todos, setTodos] = useState([]);
-  const [todoText, setTodoText] = useState('');
   const [endCursor, setEndCursor] = useState('');
   const [stop, setStop] = useState(0);
 
   const wrapperRef = useRef(null);
 
+  const addTodo = useAddTodo(todos, setTodos);
+
   const autoLoad = useAutoLoad(
-    endCursor,
-    todos,
-    setEndCursor,
-    setTodos,
-    wrapperRef,
-    setStop
+    { endCursor: endCursor, todos: todos, wrapperRef: wrapperRef },
+    { setEndCursor: setEndCursor, setTodos: setTodos, setStop: setStop }
   );
-  const addTodo = useAddTodo(todoText, todos, setTodos, setTodoText);
-  const deleteAllTodo = useDeleteAllTodo(setTodos);
-  const deleteTodo = useDeleteTodo(todos, setTodos);
-  const editTodo = useEditTodo(todos, setTodos);
+
   const handleScroll = useHandleScroll(
-    endCursor,
-    todos,
-    setEndCursor,
-    setTodos
+    { endCursor: endCursor, todos: todos },
+    { setEndCursor: setEndCursor, setTodos: setTodos }
   );
 
   useEffect(autoLoad, [stop]);
@@ -51,12 +39,12 @@ const App = () => {
     <div className={styles.wrapper} ref={wrapperRef}>
       <div className={styles.add}>
         <TodoItem
-          todoText={todoText}
           addTodo={addTodo}
-          handleChange={e => {
-            setTodoText(e.target.value);
+          deleteAllTodo={() => {
+            const newTodos = [];
+            setTodos(newTodos);
+            cookies.set('todoapp', JSON.stringify(newTodos));
           }}
-          deleteAllTodo={deleteAllTodo}
         />
       </div>
       <div>
@@ -77,8 +65,20 @@ const App = () => {
               <Todo
                 key={todo.id}
                 todo={todo}
-                deleteTodo={deleteTodo}
-                editTodo={editTodo}
+                deleteTodo={id => {
+                  const newTodos = todos.filter(todo => todo.id !== id);
+                  setTodos(newTodos);
+                  cookies.set('todoapp', JSON.stringify(newTodos));
+                }}
+                editTodo={(id, edit) => {
+                  const newTodos = todos.map(todo =>
+                    todo.id === id && edit.text.replace(/\s*/g, '') !== ''
+                      ? edit
+                      : todo
+                  );
+                  setTodos(newTodos);
+                  cookies.set('todoapp', JSON.stringify(newTodos));
+                }}
               />
             </List.Item>
           )}

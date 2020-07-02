@@ -1,18 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles/TodoItem.less';
 import { Input, Button } from 'antd';
 import useHandleValidation from './hooks/useHandleValidation';
 
-const TodoItem = ({ todoText, deleteAllTodo, handleChange, addTodo }) => {
-  const handleValidation = useHandleValidation(todoText, addTodo);
+const TodoItem = ({ deleteAllTodo, addTodo }) => {
+  const [todoText, setTodoText] = useState('');
+  const handleValidation = useHandleValidation(todoText, {
+    addTodo: addTodo,
+    setTodoText: setTodoText
+  });
 
   return (
     <div className={styles.add_item}>
       <Input
         type="text"
         value={todoText}
-        onChange={handleChange}
+        onChange={e => {
+          setTodoText(e.target.value);
+        }}
         placeholder="Add Something"
       />
       <Button type="primary" onClick={handleValidation}>
@@ -26,9 +32,7 @@ const TodoItem = ({ todoText, deleteAllTodo, handleChange, addTodo }) => {
 };
 
 TodoItem.propTypes = {
-  todoText: PropTypes.string.isRequired,
   addTodo: PropTypes.func.isRequired,
-  handleChange: PropTypes.func.isRequired,
   deleteAllTodo: PropTypes.func.isRequired
 };
 
