@@ -1,12 +1,22 @@
 import stringWidth from 'string-width';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
-export default (input, inputFunction) => {
-  return useCallback(() => {
-    if (input.length >= 200 || input.split('').some(e => stringWidth(e) == 2))
+export default addTodo => {
+  const [todoText, setTodoText] = useState('');
+  const onChange = e => {
+    setTodoText(e.target.value);
+  };
+
+  const handleValidation = useCallback(() => {
+    if (
+      todoText.length >= 200 ||
+      todoText.split('').some(e => stringWidth(e) == 2)
+    )
       return alert('Illegal input');
 
-    inputFunction.addTodo(input);
-    inputFunction.setTodoText('');
-  }, [input, inputFunction]);
+    addTodo(todoText);
+    setTodoText('');
+  }, [addTodo, todoText]);
+
+  return { todoText, onChange, handleValidation };
 };

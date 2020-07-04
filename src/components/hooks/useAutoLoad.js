@@ -1,15 +1,17 @@
-import { useCallback } from 'react';
-import loadMore from './loadMore';
+import { useEffect, useState, useRef } from 'react';
+import loadMore from '../utils/loadMore';
 
 export default (input, inputFunction) => {
-  return useCallback(() => {
+  const [stop, setStop] = useState(0);
+  const wrapperRef = useRef(null);
+  useEffect(() => {
     const toStop =
-      window.innerHeight > input.wrapperRef.current.clientHeight
-        ? window.innerHeight - input.wrapperRef.current.clientHeight
+      window.innerHeight > wrapperRef.current.clientHeight
+        ? window.innerHeight - wrapperRef.current.clientHeight
         : 0;
-    inputFunction.setStop(toStop);
+    setStop(toStop);
 
-    if (window.innerHeight < input.wrapperRef.current.clientHeight) return;
+    if (window.innerHeight < wrapperRef.current.clientHeight) return;
 
     loadMore(
       { endCursor: input.endCursor, todos: input.todos },
@@ -18,5 +20,6 @@ export default (input, inputFunction) => {
         setTodos: inputFunction.setTodos
       }
     );
-  }, [input, inputFunction]);
+  }, [stop]);
+  return { wrapperRef };
 };

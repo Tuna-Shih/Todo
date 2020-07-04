@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles/Todo.less';
 import { Tooltip, Button, Input } from 'antd';
@@ -7,13 +7,7 @@ import useCheckOverFlow from './hooks/useCheckOverFlow';
 const Todo = ({ todo, editTodo, deleteTodo }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [editText, setEditText] = useState(todo.text);
-  const [overflow, setOverflow] = useState();
-
-  const checkOverflowRef = useRef(null);
-
-  const checkOverflow = useCheckOverFlow(checkOverflowRef, setOverflow);
-
-  useEffect(checkOverflow);
+  const { overflow, checkOverflowRef } = useCheckOverFlow(isEdit);
 
   return (
     <div className={styles.item}>

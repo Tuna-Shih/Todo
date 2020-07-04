@@ -1,8 +1,8 @@
-import { useCallback } from 'react';
-import loadMore from './loadMore';
+import { useEffect } from 'react';
+import loadMore from '../utils/loadMore';
 
 export default (input, inputFunction) => {
-  return useCallback(() => {
+  const handleScroll = () => {
     if (window.innerHeight + window.scrollY < document.body.scrollHeight)
       return;
     loadMore(
@@ -12,5 +12,10 @@ export default (input, inputFunction) => {
         setTodos: inputFunction.setTodos
       }
     );
-  }, [input, inputFunction]);
+  };
+
+  useEffect(() => {
+    document.addEventListener('scroll', handleScroll);
+    return () => document.removeEventListener('scroll', handleScroll);
+  });
 };

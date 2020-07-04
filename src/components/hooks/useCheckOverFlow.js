@@ -1,11 +1,16 @@
-import { useCallback } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
-export default (input, inputFunction) => {
-  return useCallback(() => {
-    const isOverflow = getComputedStyle(input.current).width;
+export default isEdit => {
+  const [overflow, setOverflow] = useState();
+  const checkOverflowRef = useRef(null);
 
-    if (isOverflow == '250px') return inputFunction(true);
+  useEffect(() => {
+    const isOverflow = getComputedStyle(checkOverflowRef.current).width;
 
-    return inputFunction(false);
-  }, [input, inputFunction]);
+    if (isOverflow == '250px') {
+      setOverflow(true);
+    } else setOverflow(false);
+  }, [isEdit]);
+
+  return { overflow, checkOverflowRef };
 };
