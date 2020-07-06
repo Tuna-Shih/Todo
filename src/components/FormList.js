@@ -1,6 +1,7 @@
 import React from 'react';
-import styles from './styles/FormList.less';
 import { Form, Input, Button } from 'antd';
+
+import styles from './styles/FormList.less';
 import isEmail from 'validator/lib/isEmail';
 import isMobilePhone from 'validator/lib/isMobilePhone';
 import useOnFinish from './hooks/useOnFinish';

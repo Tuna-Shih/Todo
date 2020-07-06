@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import styles from './styles/Todo.less';
 import { Tooltip, Button, Input } from 'antd';
+
+import styles from './styles/Todo.less';
 import useCheckOverFlow from './hooks/useCheckOverFlow';
 
 const Todo = ({ todo, editTodo, deleteTodo }) => {

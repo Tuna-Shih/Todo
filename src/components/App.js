@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import { List } from 'antd';
+import cookies from 'js-cookie';
+
 import styles from './styles/App.less';
 import TodoItem from './TodoItem';
 import Todo from './Todo';
 import FormList from './FormList';
-import { List } from 'antd';
-import cookies from 'js-cookie';
 import useAddTodo from './hooks/useAddTodo';
 import useAutoLoad from './hooks/useAutoLoad';
 import useHandleScroll from './hooks/useHandleScroll';
@@ -15,15 +16,12 @@ const App = () => {
 
   const addTodo = useAddTodo(todos, setTodos);
 
-  const { wrapperRef } = useAutoLoad(
-    { endCursor, todos },
-    { setEndCursor, setTodos }
-  );
+  useAutoLoad({ endCursor, todos }, { setEndCursor, setTodos });
 
   useHandleScroll({ endCursor, todos }, { setEndCursor, setTodos });
 
   return (
-    <div className={styles.wrapper} ref={wrapperRef}>
+    <div className={styles.wrapper}>
       <div className={styles.add}>
         <TodoItem
           addTodo={addTodo}

@@ -3,9 +3,6 @@ import { useCallback, useState } from 'react';
 
 export default addTodo => {
   const [todoText, setTodoText] = useState('');
-  const onChange = e => {
-    setTodoText(e.target.value);
-  };
 
   const handleValidation = useCallback(() => {
     if (
@@ -18,5 +15,5 @@ export default addTodo => {
     setTodoText('');
   }, [addTodo, todoText]);
 
-  return { todoText, onChange, handleValidation };
+  return { todoText, setTodoText, handleValidation };
 };
