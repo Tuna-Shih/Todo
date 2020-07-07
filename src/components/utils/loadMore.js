@@ -2,7 +2,7 @@ import cookies from 'js-cookie';
 
 export default ({ endCursor, todos }) => {
   const getData = cookies.get('todoapp');
-  if (!getData) return [];
+  if (!getData) return { endCursor: '', todos: [], total: 0 };
   const todoData = JSON.parse(getData);
   const startIndex = !endCursor
     ? -1
