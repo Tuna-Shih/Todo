@@ -1,6 +1,6 @@
 import cookies from 'js-cookie';
 
-export default input => {
+export default ({ endCursor, todos }) => {
   const loadData = (first, after) => {
     const getData = cookies.get('todoapp');
     if (!getData) return [];
@@ -15,12 +15,11 @@ export default input => {
     };
   };
 
-  const { gotData, todosLength } = loadData(10, input.endCursor);
-  if (gotData.length === 0)
-    return { endCursor: input.endCursor, todos: input.todos, todosLength };
+  const { gotData, todosLength } = loadData(10, endCursor);
+  if (gotData.length === 0) return { endCursor, todos, todosLength };
 
   const lastID = gotData.length - 1;
-  const newTodos = [...input.todos, ...gotData];
+  const newTodos = [...todos, ...gotData];
 
   return { endCursor: gotData[lastID].id, todos: newTodos, todosLength };
 };

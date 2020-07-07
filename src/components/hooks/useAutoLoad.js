@@ -1,22 +1,32 @@
 import { useEffect } from 'react';
 import loadMore from '../utils/loadMore';
 
-export default (input, inputFunction) => {
+export default ({ endCursor, todos }, { setEndCursor, setTodos }) => {
   useEffect(() => {
-    function auto(input) {
-      const { endCursor, todos, todosLength } = loadMore({
-        endCursor: input.endCursor,
-        todos: input.todos
+    function auto({ endCursor, todos }) {
+      const {
+        endCursor: newEndCursor,
+        todos: newTodos,
+        todosLength
+      } = loadMore({
+        endCursor,
+        todos
       });
-      if (todos.length < todosLength && todos.length <= 15) {
-        return auto({ endCursor, todos });
+      if (
+        todos.length < todosLength &&
+        todos.length <= (window.innerHeight - 350) / 40
+      ) {
+        return auto({ endCursor: newEndCursor, todos: newTodos });
       } else {
         return { endCursor, todos };
       }
     }
 
-    const { endCursor, todos } = auto(input);
-    inputFunction.setEndCursor(endCursor);
-    inputFunction.setTodos(todos);
+    const { endCursor: newEndCursor, todos: newTodos } = auto({
+      endCursor,
+      todos
+    });
+    setEndCursor(newEndCursor);
+    setTodos(newTodos);
   }, []);
 };

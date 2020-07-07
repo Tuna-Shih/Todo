@@ -2,18 +2,18 @@ import { useEffect } from 'react';
 
 import loadMore from '../utils/loadMore';
 
-export default (input, inputFunction) => {
+export default ({ endCursor, todos }, { setEndCursor, setTodos }) => {
   useEffect(() => {
     const handleScroll = () => {
       if (window.innerHeight + window.scrollY < document.body.scrollHeight)
         return;
-      const { endCursor, todos } = loadMore({
-        endCursor: input.endCursor,
-        todos: input.todos
+      const { endCursor: newEndCursor, todos: newTodos } = loadMore({
+        endCursor,
+        todos
       });
 
-      inputFunction.setEndCursor(endCursor);
-      inputFunction.setTodos(todos);
+      setEndCursor(newEndCursor);
+      setTodos(newTodos);
     };
 
     document.addEventListener('scroll', handleScroll);
